@@ -7,14 +7,11 @@
 
         <title>{{ config('app.name', 'Laravel') }} - Admin @yield('title')</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        <!-- Dark Mode Script -->
         <script>
             // Check for saved theme preference or default to system preference
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && {{ config('status.dark_mode.default_dark_mode', 'false') ? 'true' : 'false' }})) {
@@ -26,7 +23,6 @@
     </head>
     <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <div class="min-h-screen">
-            <!-- Navigation -->
             <nav class="bg-white dark:bg-gray-800 shadow transition-colors duration-300">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -92,9 +88,7 @@
                 </div>
             </nav>
 
-            <!-- Page Content -->
             <main class="py-6">
-                <!-- Flash Messages -->
                 @if(session('success'))
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
                         <div class="bg-green-100 dark:bg-green-900/50 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded transition-colors duration-300">

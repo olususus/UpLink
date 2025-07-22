@@ -3,51 +3,53 @@
 @section('title', 'Monitoring Dashboard')
 
 @section('content')
-<div class="space-y-6">
-    <!-- Test Controls -->
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900">
-            <h2 class="text-xl font-semibold mb-4">🔧 Manual Testing Tools</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Test Maintenance API -->
-                <div class="border rounded-lg p-4">
-                    <h3 class="font-semibold mb-3">Test Maintenance API</h3>
-                    <div class="space-y-3">
-                        <select id="testServiceSelect" class="w-full rounded-md border-gray-300">
-                            @foreach($services as $service)
-                                @if($service->url)
-                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <button onclick="testMaintenanceAPI()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-                            Test Maintenance API
-                        </button>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Monitoring Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-400">Monitor service health and run manual checks</p>
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
+            <div class="p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">🔧 Manual Testing Tools</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3 text-gray-900 dark:text-gray-100">Test Maintenance API</h3>
+                        <div class="space-y-3">
+                            <select id="testServiceSelect" class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                @foreach($services as $service)
+                                    @if($service->url)
+                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <button onclick="testMaintenanceAPI()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full transition-colors duration-200">
+                                Test Maintenance API
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <h3 class="font-semibold mb-3 text-gray-900 dark:text-gray-100">Run Manual Check</h3>
+                        <div class="space-y-3">
+                            <select id="checkServiceSelect" class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                @foreach($services->where('type', 'automatic') as $service)
+                                    @if($service->url)
+                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <button onclick="runManualCheck()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full transition-colors duration-200">
+                                Run Check & Update Status
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Manual Service Check -->
-                <div class="border rounded-lg p-4">
-                    <h3 class="font-semibold mb-3">Run Manual Check</h3>
-                    <div class="space-y-3">
-                        <select id="checkServiceSelect" class="w-full rounded-md border-gray-300">
-                            @foreach($services->where('type', 'automatic') as $service)
-                                @if($service->url)
-                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <button onclick="runManualCheck()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
-                            Run Check & Update Status
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Test Results -->
-            <div id="testResults" class="mt-6 hidden">
-                <h3 class="font-semibold mb-3">Test Results</h3>
+                <div id="testResults" class="mt-6 hidden">
+                    <h3 class="font-semibold mb-3 text-gray-900 dark:text-gray-100">Test Results</h3>
                 <div class="bg-gray-100 rounded-lg p-4">
                     <pre id="testOutput" class="text-sm overflow-x-auto whitespace-pre-wrap"></pre>
                 </div>
@@ -55,7 +57,6 @@
         </div>
     </div>
 
-    <!-- Current Service Status -->
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
             <h2 class="text-xl font-semibold mb-4">📊 Current Service Status</h2>
@@ -81,7 +82,6 @@
         </div>
     </div>
 
-    <!-- Recent Status Checks -->
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
             <div class="flex items-center justify-between mb-4">

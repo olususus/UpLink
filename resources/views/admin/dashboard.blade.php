@@ -4,15 +4,13 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Page Header -->
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p class="text-gray-600">Monitor and manage your status page services</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
+        <p class="text-gray-600 dark:text-gray-400">Monitor and manage your status page services</p>
     </div>
 
-    <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -22,15 +20,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Services</dt>
-                            <dd class="text-lg font-medium text-gray-900">{{ $totalServices }}</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Services</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $totalServices }}</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -40,15 +38,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Active Incidents</dt>
-                            <dd class="text-lg font-medium text-gray-900">{{ $activeIncidents }}</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Active Incidents</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $activeIncidents }}</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -58,15 +56,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Incidents</dt>
-                            <dd class="text-lg font-medium text-gray-900">{{ $totalIncidents }}</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Incidents</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $totalIncidents }}</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -76,8 +74,8 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Operational</dt>
-                            <dd class="text-lg font-medium text-gray-900">{{ $services->where('status', 'operational')->count() }}</dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Operational</dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $services->where('status', 'operational')->count() }}</dd>
                         </dl>
                     </div>
                 </div>
@@ -86,18 +84,17 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Services Overview -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300">
             <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                 <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Services Overview</h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Current status of all services</p>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Services Overview</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Current status of all services</p>
                 </div>
-                <a href="{{ route('admin.services.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                <a href="{{ route('admin.services.index') }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">
                     Manage Services →
                 </a>
             </div>
-            <ul class="divide-y divide-gray-200">
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 @foreach($services as $service)
                     <li class="px-4 py-4">
                         <div class="flex items-center justify-between">
@@ -113,13 +110,13 @@
                                 @endphp
                                 <div class="h-2.5 w-2.5 rounded-full {{ $statusColor }} mr-3"></div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">{{ $service->name }}</p>
-                                    <p class="text-xs text-gray-500">{{ $service->type }}</p>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $service->name }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $service->type }}</p>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm text-gray-900">{{ $service->status_text }}</p>
-                                <p class="text-xs text-gray-500">{{ $service->incidents_count }} incidents</p>
+                                <p class="text-sm text-gray-900 dark:text-gray-100">{{ $service->status_text }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $service->incidents_count }} incidents</p>
                             </div>
                         </div>
                     </li>
@@ -127,60 +124,58 @@
             </ul>
         </div>
 
-        <!-- Recent Status Checks -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300">
             <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Status Checks</h3>
-                <p class="mt-1 max-w-2xl text-sm text-gray-500">Latest automatic monitoring results</p>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Recent Status Checks</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Latest automatic monitoring results</p>
             </div>
-            <ul class="divide-y divide-gray-200">
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse($recentChecks as $check)
                     <li class="px-4 py-3">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-sm font-medium text-gray-900">{{ $check->service->name }}</p>
-                                <p class="text-xs text-gray-500">{{ $check->checked_at->format('M d, H:i') }}</p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $check->service->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $check->checked_at->format('M d, H:i') }}</p>
                             </div>
                             <div class="text-right">
                                 @php
                                     $statusColor = match($check->status) {
-                                        'operational' => 'text-green-600',
-                                        'degraded' => 'text-yellow-600',
-                                        'maintenance' => 'text-blue-600',
-                                        'outage' => 'text-red-600',
-                                        default => 'text-gray-600'
+                                        'operational' => 'text-green-600 dark:text-green-400',
+                                        'degraded' => 'text-yellow-600 dark:text-yellow-400',
+                                        'maintenance' => 'text-blue-600 dark:text-blue-400',
+                                        'outage' => 'text-red-600 dark:text-red-400',
+                                        default => 'text-gray-600 dark:text-gray-400'
                                     };
                                 @endphp
                                 <p class="text-sm {{ $statusColor }}">{{ ucfirst($check->status) }}</p>
                                 @if($check->response_time)
-                                    <p class="text-xs text-gray-500">{{ $check->response_time }}ms</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $check->response_time }}ms</p>
                                 @endif
                             </div>
                         </div>
                     </li>
                 @empty
                     <li class="px-4 py-3">
-                        <p class="text-sm text-gray-500">No status checks yet</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">No status checks yet</p>
                     </li>
                 @endforelse
             </ul>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="mt-6 bg-white shadow rounded-lg">
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg transition-colors duration-300">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Quick Actions</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Quick Actions</h3>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
             <div class="flex space-x-4">
-                <a href="{{ route('admin.incidents.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                <a href="{{ route('admin.incidents.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors duration-200">
                     Report Incident
                 </a>
-                <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
                     Add Service
                 </a>
-                <button onclick="window.location.reload()" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <button onclick="window.location.reload()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
                     Refresh Status
                 </button>
             </div>

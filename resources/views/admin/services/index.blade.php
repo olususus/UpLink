@@ -4,20 +4,18 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">Services Management</h1>
-            <p class="text-gray-600">Manage and monitor your services</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Services Management</h1>
+            <p class="text-gray-600 dark:text-gray-400">Manage and monitor your services</p>
         </div>
-        <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+        <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
             Add Service
         </a>
     </div>
 
-    <!-- Services List -->
-    <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul class="divide-y divide-gray-200">
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md transition-colors duration-300">
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             @foreach($services as $service)
                 <li>
                     <div class="px-4 py-4 sm:px-6">
@@ -35,23 +33,22 @@
                                 <div class="h-3 w-3 rounded-full {{ $statusColor }} mr-4"></div>
                                 <div>
                                     <div class="flex items-center">
-                                        <h3 class="text-lg font-medium text-gray-900">{{ $service->name }}</h3>
-                                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $service->type === 'automatic' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $service->name }}</h3>
+                                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $service->type === 'automatic' ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300' }}">
                                             {{ ucfirst($service->type) }}
                                         </span>
                                     </div>
-                                    <p class="text-sm text-gray-600">{{ $service->description }}</p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ $service->description }}</p>
                                     @if($service->url)
-                                        <p class="text-xs text-gray-500">{{ $service->url }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-500">{{ $service->url }}</p>
                                     @endif
                                     @if($service->status_message)
-                                        <p class="text-xs text-gray-600 mt-1">{{ $service->status_message }}</p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ $service->status_message }}</p>
                                     @endif
                                 </div>
                             </div>
                             <div class="flex items-center space-x-4">
                                 @if($service->type === 'manual')
-                                    <!-- Manual Status Update Form -->
                                     <form action="{{ route('admin.services.status', $service) }}" method="POST" class="flex items-center space-x-2">
                                         @csrf
                                         @method('PATCH')
@@ -78,7 +75,6 @@
                             </div>
                         </div>
                         
-                        <!-- Service Stats -->
                         <div class="mt-2 flex items-center text-xs text-gray-500 space-x-4">
                             <span>{{ $service->incidents_count }} incidents</span>
                             <span>{{ $service->status_checks_count }} checks</span>

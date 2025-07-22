@@ -4,40 +4,38 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Page Header -->
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Notification Settings</h1>
-        <p class="text-gray-600">Configure email and Discord notifications for service status changes</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Notification Settings</h1>
+        <p class="text-gray-600 dark:text-gray-400">Configure email and Discord notifications for service status changes</p>
     </div>
 
-    <!-- Current Settings Overview -->
-    <div class="bg-white shadow rounded-lg mb-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 transition-colors duration-300">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Current Configuration</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Active notification channels</p>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Current Configuration</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Active notification channels</p>
         </div>
-        <div class="border-t border-gray-200">
+        <div class="border-t border-gray-200 dark:border-gray-700">
             <dl>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Email Notifications</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $settings['email_enabled'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                <div class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email Notifications</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $settings['email_enabled'] ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' }}">
                             {{ $settings['email_enabled'] ? 'Enabled' : 'Disabled' }}
                         </span>
                         @if($settings['notification_email'])
-                            <span class="ml-2 text-gray-600">→ {{ $settings['notification_email'] }}</span>
+                            <span class="ml-2 text-gray-600 dark:text-gray-400">→ {{ $settings['notification_email'] }}</span>
                         @endif
                     </dd>
                 </div>
-                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Discord Notifications</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $settings['discord_enabled'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Discord Notifications</dt>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $settings['discord_enabled'] ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' }}">
                             {{ $settings['discord_enabled'] ? 'Enabled' : 'Disabled' }}
                         </span>
                         @if($settings['discord_webhook_url'])
-                            <span class="ml-2 text-gray-600">→ Webhook configured</span>
-                            <button onclick="testDiscordWebhook()" class="ml-2 inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:bg-blue-200">
+                            <span class="ml-2 text-gray-600 dark:text-gray-400">→ Webhook configured</span>
+                            <button onclick="testDiscordWebhook()" class="ml-2 inline-flex items-center px-2 py-1 border border-transparent text-xs leading-4 font-medium rounded text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/75 focus:outline-none focus:bg-blue-200 dark:focus:bg-blue-900/75 transition-colors duration-200">
                                 Test Connection
                             </button>
                         @endif
@@ -47,7 +45,6 @@
         </div>
     </div>
 
-    <!-- Discord Setup Guide -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
         <div class="flex">
             <div class="flex-shrink-0">
@@ -73,7 +70,6 @@
         </div>
     </div>
 
-    <!-- Test Discord Notification -->
     @if($settings['discord_enabled'] && $settings['discord_webhook_url'])
     <div class="bg-white shadow rounded-lg mb-6">
         <div class="px-4 py-5 sm:px-6">
@@ -94,7 +90,6 @@
     </div>
     @endif
 
-    <!-- Environment Configuration Example -->
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-3">Environment Configuration</h3>
         <p class="text-sm text-gray-600 mb-4">Add these settings to your <code class="bg-gray-200 px-1 rounded">.env</code> file:</p>
@@ -117,7 +112,6 @@ COMPANY_NAME="{{ config('status.company_name', 'Your Company') }}"</code></pre>
         </div>
     </div>
 
-    <!-- Example Discord Message -->
     <div class="mt-6 bg-white shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">Discord Message Preview</h3>
