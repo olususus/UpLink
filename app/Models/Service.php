@@ -16,12 +16,21 @@ class Service extends Model
         'status',
         'status_message',
         'is_active',
-        'check_interval'
+        'check_interval',
+        'error_patterns',
+        'http_headers',
+        'timeout',
+        'follow_redirects',
+        'expected_status_codes'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'check_interval' => 'integer'
+        'check_interval' => 'integer',
+        'error_patterns' => 'array',
+        'http_headers' => 'array',
+        'timeout' => 'integer',
+        'follow_redirects' => 'boolean'
     ];
 
     public function incidents(): HasMany

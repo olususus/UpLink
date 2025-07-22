@@ -22,24 +22,28 @@ This is a Laravel-based status monitoring website for DBusWorld services. The ap
 
 ## Database Configuration
 
--   **Host**: localhost
--   **Database**: Status-DBus
--   **Username**: root
--   **Password**: 4KyMDdT9krw8BFR
+Use environment variables for database configuration:
+
+-   **Host**: Set via `DB_HOST`
+-   **Database**: Set via `DB_DATABASE`
+-   **Username**: Set via `DB_USERNAME`
+-   **Password**: Set via `DB_PASSWORD`
 
 ## Admin Credentials
 
--   **Email**: varter.fanart@gmail.com
--   **Password**: Olek2009#
+Set via environment variables:
+
+-   **Email**: Set via `ADMIN_EMAIL`
+-   **Password**: Set via `ADMIN_PASSWORD`
 
 ## Services Monitored
 
-1. **DBusWorld Website** (dbusworld.com) - Automatic monitoring
+1. **Custom Services** - Configurable monitoring with custom error detection
 2. **Game Server** - Manual status updates
 3. **Discord Bot** - Manual status updates
 
 ## Special Rules
 
--   503 HTTP status from dbusworld.com indicates maintenance mode
+-   Custom error monitoring patterns can be configured per service
 -   Incident descriptions are always added manually
--   Status updates are automatic for website, manual for game server and Discord bot
+-   Status updates are automatic for monitored services, manual for others

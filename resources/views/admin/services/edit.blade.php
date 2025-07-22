@@ -119,6 +119,42 @@
                         @enderror
                     </div>
 
+                    <!-- Timeout -->
+                    <div>
+                        <label for="timeout" class="block text-sm font-medium text-gray-700">Request Timeout (seconds)</label>
+                        <input type="number" name="timeout" id="timeout" value="{{ old('timeout', $service->timeout ?? 10) }}" 
+                               min="1" max="60" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <p class="mt-1 text-xs text-gray-500">How long to wait for a response (1-60 seconds)</p>
+                        @error('timeout')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Expected Status Codes -->
+                    <div>
+                        <label for="expected_status_codes" class="block text-sm font-medium text-gray-700">Expected Status Codes</label>
+                        <input type="text" name="expected_status_codes" id="expected_status_codes" 
+                               value="{{ old('expected_status_codes', $service->expected_status_codes ?? '200-299') }}" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <p class="mt-1 text-xs text-gray-500">Comma-separated codes or ranges (e.g., 200-299,301,302)</p>
+                        @error('expected_status_codes')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Follow Redirects -->
+                    <div class="flex items-center">
+                        <input type="checkbox" name="follow_redirects" id="follow_redirects" value="1" 
+                               {{ old('follow_redirects', $service->follow_redirects ?? true) ? 'checked' : '' }}
+                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="follow_redirects" class="ml-2 block text-sm text-gray-900">
+                            Follow redirects
+                        </label>
+                        @error('follow_redirects')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Active -->
                     <div class="flex items-center">
                         <input type="checkbox" name="is_active" id="is_active" value="1" 
@@ -131,6 +167,69 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+            </div>
+
+            <!-- Advanced Monitoring Configuration -->
+            <div class="mt-8 bg-gray-50 p-6 rounded-lg">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Advanced Monitoring (Optional)</h3>
+                
+                <!-- Error Patterns -->
+                <div class="mb-4">
+                    <label for="error_patterns" class="block text-sm font-medium text-gray-700">Error Patterns</label>
+                    <div id="error-patterns-container">
+                        @php
+                            $errorPatterns = old('error_patterns', $service->error_patterns ?? []);
+                            if (empty($errorPatterns)) $errorPatterns = [''];
+                        @endphp
+                        @foreach($errorPatterns as $index => $pattern)
+                            <div class="error-pattern-row flex items-center mt-2">
+                                <input type="text" name="error_patterns[]" 
+                                       value="{{ $pattern }}" 
+                                       placeholder="Error text or /regex/" 
+                                       class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <button type="button" onclick="removeErrorPattern(this)" 
+                                        class="ml-2 text-red-600 hover:text-red-800 text-sm">Remove</button>
+                            </div>
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addErrorPattern()" 
+                            class="mt-2 text-blue-600 hover:text-blue-800 text-sm">+ Add Error Pattern</button>
+                    <p class="mt-1 text-xs text-gray-500">Text patterns or regex (e.g., "error" or "/error.*occurred/i") to detect in response body</p>
+                    @error('error_patterns')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- HTTP Headers -->
+                <div>
+                    <label for="http_headers" class="block text-sm font-medium text-gray-700">Custom HTTP Headers</label>
+                    <div id="http-headers-container">
+                        @php
+                            $httpHeaders = old('http_headers', $service->http_headers ?? []);
+                            if (empty($httpHeaders)) $httpHeaders = [''];
+                        @endphp
+                        @foreach($httpHeaders as $header => $value)
+                            <div class="http-header-row flex items-center mt-2">
+                                <input type="text" name="http_headers_keys[]" 
+                                       value="{{ is_string($header) ? $header : '' }}" 
+                                       placeholder="Header name" 
+                                       class="flex-1 mr-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <input type="text" name="http_headers_values[]" 
+                                       value="{{ is_string($header) ? $value : $header }}" 
+                                       placeholder="Header value" 
+                                       class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <button type="button" onclick="removeHttpHeader(this)" 
+                                        class="ml-2 text-red-600 hover:text-red-800 text-sm">Remove</button>
+                            </div>
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addHttpHeader()" 
+                            class="mt-2 text-blue-600 hover:text-blue-800 text-sm">+ Add HTTP Header</button>
+                    <p class="mt-1 text-xs text-gray-500">Custom headers to send with requests (e.g., User-Agent, Authorization)</p>
+                    @error('http_headers')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
@@ -179,6 +278,73 @@ document.getElementById('name').addEventListener('input', function() {
         .replace(/-+/g, '-')
         .trim();
     document.getElementById('slug').value = slug;
+});
+
+// Error Patterns Management
+function addErrorPattern() {
+    const container = document.getElementById('error-patterns-container');
+    const div = document.createElement('div');
+    div.className = 'error-pattern-row flex items-center mt-2';
+    div.innerHTML = `
+        <input type="text" name="error_patterns[]" 
+               placeholder="Error text or /regex/" 
+               class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <button type="button" onclick="removeErrorPattern(this)" 
+                class="ml-2 text-red-600 hover:text-red-800 text-sm">Remove</button>
+    `;
+    container.appendChild(div);
+}
+
+function removeErrorPattern(button) {
+    const container = document.getElementById('error-patterns-container');
+    if (container.children.length > 1) {
+        button.parentElement.remove();
+    }
+}
+
+// HTTP Headers Management
+function addHttpHeader() {
+    const container = document.getElementById('http-headers-container');
+    const div = document.createElement('div');
+    div.className = 'http-header-row flex items-center mt-2';
+    div.innerHTML = `
+        <input type="text" name="http_headers_keys[]" 
+               placeholder="Header name" 
+               class="flex-1 mr-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <input type="text" name="http_headers_values[]" 
+               placeholder="Header value" 
+               class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <button type="button" onclick="removeHttpHeader(this)" 
+                class="ml-2 text-red-600 hover:text-red-800 text-sm">Remove</button>
+    `;
+    container.appendChild(div);
+}
+
+function removeHttpHeader(button) {
+    const container = document.getElementById('http-headers-container');
+    if (container.children.length > 1) {
+        button.parentElement.remove();
+    }
+}
+
+// Clean up empty inputs on form submission
+document.querySelector('form').addEventListener('submit', function() {
+    // Remove empty error pattern inputs
+    document.querySelectorAll('input[name="error_patterns[]"]').forEach(input => {
+        if (!input.value.trim()) {
+            input.remove();
+        }
+    });
+    
+    // Remove empty header inputs
+    const headerRows = document.querySelectorAll('.http-header-row');
+    headerRows.forEach(row => {
+        const keyInput = row.querySelector('input[name="http_headers_keys[]"]');
+        const valueInput = row.querySelector('input[name="http_headers_values[]"]');
+        if (!keyInput.value.trim() && !valueInput.value.trim()) {
+            row.remove();
+        }
+    });
 });
 </script>
 @endsection

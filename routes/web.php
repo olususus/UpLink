@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\IncidentController;
@@ -10,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 // Public status page
 Route::get('/', [StatusController::class, 'index'])->name('status.index');
+
+// Health check endpoint
+Route::get('/health', [HealthController::class, 'check'])->name('health.check');
 
 // Authentication routes
 require __DIR__.'/auth.php';

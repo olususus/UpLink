@@ -60,45 +60,35 @@ class MonitorServices extends Command
         try {
             $start = microtime(true);
             
-            // Special handling for DBusWorld website - check maintenance API first
-            if ($service->slug === 'dbusworld-website') {
-                $maintenanceStatus = $this->checkMaintenanceAPI($service->url);
-                if ($maintenanceStatus) {
-                    $responseTime = (int)((microtime(true) - $start) * 1000);
-                    
-                    $oldStatus = $service->status;
-                    $service->update([
-                        'status' => 'maintenance',
-                        'status_message' => $maintenanceStatus['message'] ?? 'Website is under maintenance'
-                    ]);
-
-                    StatusCheck::create([
-                        'service_id' => $service->id,
-                        'status' => 'maintenance',
-                        'response_time' => $responseTime,
-                        'http_status' => 503,
-                        'checked_at' => now()
-                    ]);
-
-                    if ($oldStatus !== 'maintenance') {
-                        $this->warn("Status changed for {$service->name}: {$oldStatus} -> maintenance");
-                    }
-                    return;
-                }
-            }
+            // Build HTTP options
+            $options = [
+                'timeout' => $service->timeout ?? 10,
+                'allow_redirects' => $service->follow_redirects ?? true,
+                'headers' => $service->http_headers ?? []
+            ];
             
             // Regular HTTP status check
-            $response = $this->httpClient->get($service->url);
+            $response = $this->httpClient->get($service->url, $options);
             $responseTime = (int)((microtime(true) - $start) * 1000);
 
             $httpStatus = $response->getStatusCode();
-            $status = $this->determineStatus($httpStatus);
+            $responseBody = $response->getBody()->getContents();
+            
+            // Check for expected status codes
+            $expectedCodes = $this->parseStatusCodes($service->expected_status_codes ?? '200-299');
+            $hasValidStatus = in_array($httpStatus, $expectedCodes);
+            
+            // Check for error patterns in response body
+            $errorDetected = $this->checkForErrorPatterns($responseBody, $service->error_patterns ?? []);
+            
+            // Determine final status
+            $status = $this->determineServiceStatus($httpStatus, $hasValidStatus, $errorDetected);
             
             // Update service status
             $oldStatus = $service->status;
             $service->update([
                 'status' => $status,
-                'status_message' => $this->getStatusMessage($status, $httpStatus)
+                'status_message' => $this->getStatusMessage($status, $httpStatus, $errorDetected)
             ]);
 
             // Log the check
@@ -107,6 +97,7 @@ class MonitorServices extends Command
                 'status' => $status,
                 'response_time' => $responseTime,
                 'http_status' => $httpStatus,
+                'error_message' => $errorDetected ? 'Error pattern detected in response' : null,
                 'checked_at' => now()
             ]);
 
@@ -131,18 +122,76 @@ class MonitorServices extends Command
         }
     }
 
-    private function determineStatus(int $httpStatus): string
+    private function parseStatusCodes(string $statusCodes): array
     {
-        return match(true) {
-            $httpStatus >= 200 && $httpStatus < 300 => 'operational',
-            $httpStatus === 503 => 'maintenance', // Special case for dbusworld.com
-            $httpStatus >= 400 && $httpStatus < 500 => 'degraded',
-            default => 'outage'
-        };
+        $codes = [];
+        $ranges = explode(',', $statusCodes);
+        
+        foreach ($ranges as $range) {
+            $range = trim($range);
+            if (strpos($range, '-') !== false) {
+                [$start, $end] = explode('-', $range);
+                for ($i = (int)$start; $i <= (int)$end; $i++) {
+                    $codes[] = $i;
+                }
+            } else {
+                $codes[] = (int)$range;
+            }
+        }
+        
+        return $codes;
     }
 
-    private function getStatusMessage(string $status, int $httpStatus): string
+    private function checkForErrorPatterns(string $responseBody, array $patterns): bool
     {
+        if (empty($patterns)) {
+            return false;
+        }
+        
+        foreach ($patterns as $pattern) {
+            if (empty($pattern)) continue;
+            
+            // Support both regex and plain text patterns
+            if (str_starts_with($pattern, '/') && str_ends_with($pattern, '/')) {
+                // Regex pattern
+                if (preg_match($pattern, $responseBody)) {
+                    return true;
+                }
+            } else {
+                // Plain text pattern (case-insensitive)
+                if (stripos($responseBody, $pattern) !== false) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    private function determineServiceStatus(int $httpStatus, bool $hasValidStatus, bool $errorDetected): string
+    {
+        if ($errorDetected) {
+            return 'degraded';
+        }
+        
+        if (!$hasValidStatus) {
+            return match(true) {
+                $httpStatus === 503 => 'maintenance',
+                $httpStatus >= 500 => 'outage',
+                $httpStatus >= 400 => 'degraded',
+                default => 'degraded'
+            };
+        }
+        
+        return 'operational';
+    }
+
+    private function getStatusMessage(string $status, int $httpStatus, bool $errorDetected = false): string
+    {
+        if ($errorDetected) {
+            return "Error pattern detected in response (HTTP {$httpStatus})";
+        }
+        
         return match($status) {
             'operational' => "Service is running normally (HTTP {$httpStatus})",
             'maintenance' => 'Service is under maintenance',
@@ -150,43 +199,5 @@ class MonitorServices extends Command
             'outage' => "Service is down (HTTP {$httpStatus})",
             default => 'Status unknown'
         };
-    }
-
-    /**
-     * Check DBusWorld maintenance API
-     */
-    private function checkMaintenanceAPI(string $baseUrl): ?array
-    {
-        try {
-            $maintenanceUrl = rtrim($baseUrl, '/') . '/technical-break/status';
-            $response = $this->httpClient->get($maintenanceUrl, [
-                'timeout' => 5,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'User-Agent' => 'DBusWorld-Status-Monitor/1.0'
-                ]
-            ]);
-
-            if ($response->getStatusCode() === 200) {
-                $data = json_decode($response->getBody()->getContents(), true);
-                
-                if (isset($data['active']) && $data['active'] === true) {
-                    return [
-                        'active' => true,
-                        'message' => $data['message'] ?? 'Website is under maintenance',
-                        'title' => $data['title'] ?? 'Maintenance',
-                        'estimated_end' => $data['estimated_end'] ?? null,
-                        'time_remaining' => $data['time_remaining'] ?? null,
-                        'progress_percentage' => $data['progress_percentage'] ?? 0
-                    ];
-                }
-            }
-            
-            return null; // No maintenance active
-            
-        } catch (GuzzleException $e) {
-            $this->info("Could not check maintenance API for {$baseUrl}: " . $e->getMessage());
-            return null; // Fallback to regular HTTP check
-        }
     }
 }
