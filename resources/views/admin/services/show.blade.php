@@ -3,8 +3,9 @@
 @section('title', 'Service Details')
 
 @section('content')
-<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-    <div class="p-6 text-gray-900">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
+            <div class="p-6 text-gray-900 dark:text-gray-100">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold">Service: {{ $service->name }}</h1>
             <div class="space-x-2">
@@ -179,5 +180,6 @@
         </div>
         @endif
     </div>
+</div>
 </div>
 @endsection
