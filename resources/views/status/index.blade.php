@@ -81,13 +81,13 @@
                                     <h4 class="text-sm font-medium text-gray-900">{{ $incident->title }}</h4>
                                     <p class="text-sm text-gray-600 mt-1">{{ $incident->description }}</p>
                                     <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
-                                        <span>{{ $incident->service->name }}</span>
-                                        <span>{{ $incident->impact_text }} Impact</span>
-                                        <span>{{ $incident->started_at->diffForHumans() }}</span>
+                                        <span>{{ $incident->service?->name ?? 'Unknown Service' }}</span>
+                                        <span>{{ $incident->impact_text ?? 'Minor' }} Impact</span>
+                                        <span>{{ $incident->started_at?->diffForHumans() ?? 'Unknown time' }}</span>
                                     </div>
                                 </div>
                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                    {{ $incident->status_text }}
+                                    {{ $incident->status_text ?? 'Unknown' }}
                                 </span>
                             </div>
                         </div>
@@ -104,13 +104,13 @@
             <p class="mt-1 max-w-2xl text-sm text-gray-500">Current status of all monitored services.</p>
         </div>
         <ul class="divide-y divide-gray-200">
-            @foreach($services as $service)
+            @forelse($services as $service)
                 <li class="px-4 py-4 sm:px-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
                                 @php
-                                    $statusColor = match($service->status) {
+                                    $statusColor = match($service->status ?? 'unknown') {
                                         'operational' => 'bg-green-500',
                                         'degraded' => 'bg-yellow-500',
                                         'maintenance' => 'bg-blue-500',
@@ -122,22 +122,22 @@
                             </div>
                             <div class="ml-4">
                                 <div class="flex items-center">
-                                    <p class="text-sm font-medium text-gray-900">{{ $service->name }}</p>
-                                    @if($service->type === 'automatic')
+                                    <p class="text-sm font-medium text-gray-900">{{ $service->name ?? 'Unknown Service' }}</p>
+                                    @if(($service->type ?? '') === 'automatic')
                                         <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                             Auto
                                         </span>
                                     @endif
                                 </div>
-                                <p class="text-sm text-gray-500">{{ $service->description }}</p>
-                                @if($service->status_message)
+                                <p class="text-sm text-gray-500">{{ $service->description ?? 'No description available' }}</p>
+                                @if($service->status_message ?? false)
                                     <p class="text-xs text-gray-400 mt-1">{{ $service->status_message }}</p>
                                 @endif
                             </div>
                         </div>
                         <div class="flex items-center">
                             @php
-                                $statusBadgeColor = match($service->status) {
+                                $statusBadgeColor = match($service->status ?? 'unknown') {
                                     'operational' => 'bg-green-100 text-green-800',
                                     'degraded' => 'bg-yellow-100 text-yellow-800',
                                     'maintenance' => 'bg-blue-100 text-blue-800',
@@ -146,12 +146,20 @@
                                 };
                             @endphp
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusBadgeColor }}">
-                                {{ $service->status_text }}
+                                {{ $service->status_text ?? 'Unknown' }}
                             </span>
                         </div>
                     </div>
                 </li>
-            @endforeach
+            @empty
+                <li class="px-4 py-8 text-center">
+                    <div class="text-gray-500">
+                        <p class="text-lg font-medium">No services configured yet</p>
+                        <p class="text-sm mt-1">Please run the database migrations and seeder to set up the monitoring services:</p>
+                        <p class="text-xs mt-2 font-mono bg-gray-100 px-2 py-1 rounded">php artisan migrate --seed</p>
+                    </div>
+                </li>
+            @endforelse
         </ul>
     </div>
 
@@ -170,10 +178,10 @@
                                 <h4 class="text-sm font-medium text-gray-900">{{ $incident->title }}</h4>
                                 <p class="text-sm text-gray-600 mt-1">{{ $incident->description }}</p>
                                 <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
-                                    <span>{{ $incident->service->name }}</span>
-                                    <span>{{ $incident->impact_text }} Impact</span>
-                                    <span>Duration: {{ $incident->duration }}</span>
-                                    <span>Resolved {{ $incident->resolved_at->diffForHumans() }}</span>
+                                    <span>{{ $incident->service?->name ?? 'Unknown Service' }}</span>
+                                    <span>{{ $incident->impact_text ?? 'Minor' }} Impact</span>
+                                    <span>Duration: {{ $incident->duration ?? 'Unknown' }}</span>
+                                    <span>Resolved {{ $incident->resolved_at?->diffForHumans() ?? 'Unknown time' }}</span>
                                 </div>
                             </div>
                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
