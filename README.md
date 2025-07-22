@@ -343,4 +343,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 -   **Documentation**: See `/docs` directory
 -   **Issues**: Report bugs on GitHub Issues
--   **Security**: Email security issues to security@yourcompany.com
+
+---
+
+_Made by sprawdzany_
