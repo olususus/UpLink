@@ -19,7 +19,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('services', ServiceController::class);
     Route::resource('incidents', IncidentController::class);
     Route::patch('services/{service}/status', [ServiceController::class, 'updateStatus'])->name('services.status');
-    Route::post('incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('incidents.resolve');
+    Route::patch('incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('incidents.resolve');
 });
 
 // Breeze dashboard route (redirect to admin)
