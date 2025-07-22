@@ -129,15 +129,15 @@
 </nav>
 
 <!-- Footer -->
-<footer class="bg-gray-50 border-t border-gray-200 mt-auto">
+<footer class="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-center">
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
                 Made with ❤️ by 
                 <a href="https://sprawdzany.rocks" 
                    target="_blank" 
                    rel="noopener noreferrer"
-                   class="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">
+                   class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-200">
                     Sprawdzany
                 </a>
             </p>
