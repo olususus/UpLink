@@ -107,3 +107,20 @@
     </div>
     @endauth
 </nav>
+
+<!-- Footer -->
+<footer class="bg-gray-50 border-t border-gray-200 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center justify-center">
+            <p class="text-sm text-gray-600">
+                Made with ❤️ by 
+                <a href="https://sprawdzany.rocks" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">
+                    Sprawdzany
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
