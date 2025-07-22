@@ -22,9 +22,12 @@
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <div class="flex-shrink-0 flex items-center">
-                                <h1 class="text-xl font-bold text-gray-900">
-                                    DBusWorld Status - Admin
-                                </h1>
+                                <a href="{{ route('status.index') }}" class="flex items-center space-x-2">
+                                    <div>
+                                        <span class="text-xl font-bold text-gray-900">DBus World</span>
+                                        <span class="text-sm text-gray-500 ml-1">Admin</span>
+                                    </div>
+                                </a>
                             </div>
                             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                                 <a href="{{ route('admin.dashboard') }}" class="@if(request()->routeIs('admin.dashboard')) border-blue-500 text-gray-900 @else border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 @endif inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
