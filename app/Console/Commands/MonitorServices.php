@@ -59,6 +59,35 @@ class MonitorServices extends Command
     {
         try {
             $start = microtime(true);
+            
+            // Special handling for DBusWorld website - check maintenance API first
+            if ($service->slug === 'dbusworld-website') {
+                $maintenanceStatus = $this->checkMaintenanceAPI($service->url);
+                if ($maintenanceStatus) {
+                    $responseTime = (int)((microtime(true) - $start) * 1000);
+                    
+                    $oldStatus = $service->status;
+                    $service->update([
+                        'status' => 'maintenance',
+                        'status_message' => $maintenanceStatus['message'] ?? 'Website is under maintenance'
+                    ]);
+
+                    StatusCheck::create([
+                        'service_id' => $service->id,
+                        'status' => 'maintenance',
+                        'response_time' => $responseTime,
+                        'http_status' => 503,
+                        'checked_at' => now()
+                    ]);
+
+                    if ($oldStatus !== 'maintenance') {
+                        $this->warn("Status changed for {$service->name}: {$oldStatus} -> maintenance");
+                    }
+                    return;
+                }
+            }
+            
+            // Regular HTTP status check
             $response = $this->httpClient->get($service->url);
             $responseTime = (int)((microtime(true) - $start) * 1000);
 
@@ -121,5 +150,43 @@ class MonitorServices extends Command
             'outage' => "Service is down (HTTP {$httpStatus})",
             default => 'Status unknown'
         };
+    }
+
+    /**
+     * Check DBusWorld maintenance API
+     */
+    private function checkMaintenanceAPI(string $baseUrl): ?array
+    {
+        try {
+            $maintenanceUrl = rtrim($baseUrl, '/') . '/technical-break/status';
+            $response = $this->httpClient->get($maintenanceUrl, [
+                'timeout' => 5,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'User-Agent' => 'DBusWorld-Status-Monitor/1.0'
+                ]
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                $data = json_decode($response->getBody()->getContents(), true);
+                
+                if (isset($data['active']) && $data['active'] === true) {
+                    return [
+                        'active' => true,
+                        'message' => $data['message'] ?? 'Website is under maintenance',
+                        'title' => $data['title'] ?? 'Maintenance',
+                        'estimated_end' => $data['estimated_end'] ?? null,
+                        'time_remaining' => $data['time_remaining'] ?? null,
+                        'progress_percentage' => $data['progress_percentage'] ?? 0
+                    ];
+                }
+            }
+            
+            return null; // No maintenance active
+            
+        } catch (GuzzleException $e) {
+            $this->info("Could not check maintenance API for {$baseUrl}: " . $e->getMessage());
+            return null; // Fallback to regular HTTP check
+        }
     }
 }
