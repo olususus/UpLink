@@ -14,11 +14,18 @@ class IncidentController extends Controller
      */
     public function index()
     {
-        $incidents = Incident::with('service')
+        $activeIncidents = Incident::with('service')
+            ->where('is_resolved', false)
             ->orderBy('started_at', 'desc')
-            ->paginate(20);
+            ->get();
+            
+        $resolvedIncidents = Incident::with('service')
+            ->where('is_resolved', true)
+            ->orderBy('resolved_at', 'desc')
+            ->limit(20)
+            ->get();
         
-        return view('admin.incidents.index', compact('incidents'));
+        return view('admin.incidents.index', compact('activeIncidents', 'resolvedIncidents'));
     }
 
     /**
@@ -39,17 +46,18 @@ class IncidentController extends Controller
             'service_id' => 'required|exists:services,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'impact' => 'required|in:minor,major,critical',
+            'severity' => 'required|in:minor,major,critical',
             'status' => 'required|in:investigating,identified,monitoring,resolved',
+            'started_at' => 'required|date',
         ]);
 
         $incident = Incident::create([
             'service_id' => $request->service_id,
             'title' => $request->title,
             'description' => $request->description,
-            'impact' => $request->impact,
+            'severity' => $request->severity,
             'status' => $request->status,
-            'started_at' => now(),
+            'started_at' => $request->started_at,
         ]);
 
         return redirect()->route('admin.incidents.index')
@@ -83,12 +91,14 @@ class IncidentController extends Controller
             'service_id' => 'required|exists:services,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'impact' => 'required|in:minor,major,critical',
+            'severity' => 'required|in:minor,major,critical',
             'status' => 'required|in:investigating,identified,monitoring,resolved',
+            'started_at' => 'required|date',
+            'resolved_at' => 'nullable|date',
         ]);
 
         $incident->update($request->only([
-            'service_id', 'title', 'description', 'impact', 'status'
+            'service_id', 'title', 'description', 'severity', 'status', 'started_at', 'resolved_at'
         ]));
 
         return redirect()->route('admin.incidents.index')
