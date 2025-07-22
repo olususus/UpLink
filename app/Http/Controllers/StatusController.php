@@ -11,6 +11,11 @@ class StatusController extends Controller
     public function index()
     {
         try {
+            // Check if database tables exist
+            if (!\Schema::hasTable('services')) {
+                return $this->showSetupPage('Database tables not found. Please run migrations.');
+            }
+
             $services = Service::where('is_active', true)
                 ->orderBy('id')
                 ->get();
@@ -29,16 +34,22 @@ class StatusController extends Controller
             $overallStatus = $this->calculateOverallStatus($services);
 
             return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'));
-        } catch (\Exception $e) {
-            // Fallback for when database isn't set up yet
-            $services = collect([]);
-            $activeIncidents = collect([]);
-            $pastIncidents = collect([]);
-            $overallStatus = 'operational';
             
-            return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'))
-                ->with('error', 'Database not configured yet. Please run migrations: php artisan migrate --seed');
+        } catch (\Exception $e) {
+            // Fallback for any database errors
+            return $this->showSetupPage('Database connection failed: ' . $e->getMessage());
         }
+    }
+
+    private function showSetupPage($message)
+    {
+        $services = collect([]);
+        $activeIncidents = collect([]);
+        $pastIncidents = collect([]);
+        $overallStatus = 'operational';
+        
+        return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'))
+            ->with('error', $message);
     }
 
     private function calculateOverallStatus($services)

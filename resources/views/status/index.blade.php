@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <!-- Error Message if Database not configured -->
-    @if(session('error'))
+    @if(isset($error) || session('error'))
         <div class="bg-red-50 border border-red-200 rounded-lg mb-6">
             <div class="px-4 py-5 sm:p-6">
                 <div class="flex">
@@ -15,8 +15,11 @@
                         </span>
                     </div>
                     <div class="ml-5 w-0 flex-1">
-                        <p class="text-sm text-red-700">{{ session('error') }}</p>
+                        <p class="text-sm text-red-700">{{ $error ?? session('error') }}</p>
                         <p class="text-xs text-red-600 mt-1">This message will disappear once the database is properly configured.</p>
+                        <div class="mt-3">
+                            <p class="text-xs text-red-600 font-mono">Run: php artisan migrate --seed</p>
+                        </div>
                     </div>
                 </div>
             </div>
