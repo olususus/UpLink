@@ -13,6 +13,26 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <!-- Custom Theme Colors -->
+        <style>
+            :root {
+                --color-primary: {{ config('status.theme.primary_color', '#3b82f6') }};
+                --color-success: {{ config('status.theme.success_color', '#10b981') }};
+                --color-warning: {{ config('status.theme.warning_color', '#f59e0b') }};
+                --color-danger: {{ config('status.theme.danger_color', '#ef4444') }};
+                --color-info: {{ config('status.theme.info_color', '#06b6d4') }};
+            }
+            
+            .bg-primary { background-color: var(--color-primary) !important; }
+            .text-primary { color: var(--color-primary) !important; }
+            .border-primary { border-color: var(--color-primary) !important; }
+            
+            .bg-status-operational { background-color: var(--color-success) !important; }
+            .bg-status-degraded { background-color: var(--color-warning) !important; }
+            .bg-status-outage { background-color: var(--color-danger) !important; }
+            .bg-status-maintenance { background-color: var(--color-info) !important; }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -31,6 +51,28 @@
             <main>
                 @yield('content')
             </main>
+            
+            <!-- Footer with company info -->
+            <footer class="bg-white border-t border-gray-200 mt-8">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center text-sm text-gray-600">
+                        <div>
+                            <p>&copy; {{ date('Y') }} {{ config('status.company_name', config('app.name')) }}. All rights reserved.</p>
+                        </div>
+                        <div class="flex space-x-4">
+                            @if(config('status.support_url'))
+                                <a href="{{ config('status.support_url') }}" class="hover:text-blue-600">Support</a>
+                            @endif
+                            @if(config('status.support_email'))
+                                <a href="mailto:{{ config('status.support_email') }}" class="hover:text-blue-600">Contact</a>
+                            @endif
+                            @if(config('status.twitter_handle'))
+                                <a href="https://twitter.com/{{ config('status.twitter_handle') }}" class="hover:text-blue-600">Twitter</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </body>
 </html>

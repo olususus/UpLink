@@ -69,4 +69,30 @@ class Service extends Model
             default => 'Unknown'
         };
     }
+
+    /**
+     * Calculate uptime percentage for the last N days
+     */
+    public function getUptimePercentage(int $days = 30): float
+    {
+        if (!config('status.show_uptime_percentage', false)) {
+            return 0.0;
+        }
+
+        $startDate = now()->subDays($days);
+        $totalChecks = $this->statusChecks()
+            ->where('checked_at', '>=', $startDate)
+            ->count();
+
+        if ($totalChecks === 0) {
+            return 0.0;
+        }
+
+        $successfulChecks = $this->statusChecks()
+            ->where('checked_at', '>=', $startDate)
+            ->where('status', 'operational')
+            ->count();
+
+        return round(($successfulChecks / $totalChecks) * 100, 2);
+    }
 }

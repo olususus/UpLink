@@ -29,7 +29,7 @@
     <!-- Overall Status Header -->
     <div class="bg-white overflow-hidden shadow rounded-lg mb-6">
         <div class="px-4 py-5 sm:p-6">
-            <div class="flex items-center">
+            <div class="flex items-center justify-between">
                 <div class="flex-shrink-0">
                     @php
                         $statusColor = match($overallStatus) {
@@ -67,6 +67,19 @@
                         <p class="text-sm text-gray-500">Some services are experiencing issues. Check individual service status below.</p>
                     @endif
                 </div>
+                
+                <!-- Support Contact -->
+                @if(config('status.support_email'))
+                    <div class="flex-shrink-0">
+                        <a href="mailto:{{ config('status.support_email') }}" 
+                           class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                            Contact Support
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -148,6 +161,18 @@
                                     default => 'bg-gray-100 text-gray-800'
                                 };
                             @endphp
+                            
+                            @if(config('status.show_uptime_percentage', false))
+                                @php
+                                    $uptime = $service->getUptimePercentage(30);
+                                    $uptimeColor = $uptime >= 99.9 ? 'text-green-600' : ($uptime >= 99 ? 'text-yellow-600' : 'text-red-600');
+                                @endphp
+                                <div class="text-right mr-4">
+                                    <div class="text-sm font-medium {{ $uptimeColor }}">{{ $uptime }}%</div>
+                                    <div class="text-xs text-gray-500">30-day uptime</div>
+                                </div>
+                            @endif
+                            
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusBadgeColor }}">
                                 {{ $service->status_text ?? 'Unknown' }}
                             </span>
@@ -198,10 +223,51 @@
     @endif
 </div>
 
+@if(config('status.enable_auto_refresh', true))
 <script>
-    // Auto-refresh page every 5 minutes
-    setTimeout(function() {
-        window.location.reload();
-    }, 300000);
+    // Auto-refresh page based on configuration
+    const refreshInterval = {{ config('status.auto_refresh_interval', 30) }} * 1000; // Convert to milliseconds
+    
+    let countdown = refreshInterval / 1000;
+    let refreshTimer;
+    
+    function updateCountdown() {
+        const statusElement = document.querySelector('.refresh-countdown');
+        if (statusElement) {
+            statusElement.textContent = `Auto-refresh in ${countdown}s`;
+        }
+        
+        if (countdown <= 0) {
+            window.location.reload();
+        } else {
+            countdown--;
+        }
+    }
+    
+    // Add refresh indicator
+    document.addEventListener('DOMContentLoaded', function() {
+        const header = document.querySelector('.bg-white.overflow-hidden.shadow.rounded-lg.mb-6 .px-4.py-5.sm\\:p-6');
+        if (header) {
+            const refreshDiv = document.createElement('div');
+            refreshDiv.className = 'mt-2 text-xs text-gray-500';
+            refreshDiv.innerHTML = '<span class="refresh-countdown">Auto-refresh in ' + (refreshInterval/1000) + 's</span> | <button onclick="clearInterval(refreshTimer)" class="text-blue-600 hover:text-blue-800">Disable auto-refresh</button>';
+            header.appendChild(refreshDiv);
+        }
+        
+        // Start countdown
+        refreshTimer = setInterval(updateCountdown, 1000);
+    });
 </script>
+@endif
+
+<!-- Uptime Display -->
+@if(config('status.show_uptime_percentage', true))
+<script>
+    // Add uptime percentages to service cards
+    document.addEventListener('DOMContentLoaded', function() {
+        // This would calculate and display uptime percentages
+        // Implementation would require additional backend calculations
+    });
+</script>
+@endif
 @endsection

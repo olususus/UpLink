@@ -4,9 +4,11 @@ namespace App\Console\Commands;
 
 use App\Models\Service;
 use App\Models\StatusCheck;
+use App\Mail\ServiceStatusChanged;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class MonitorServices extends Command
 {
@@ -83,13 +85,11 @@ class MonitorServices extends Command
             
             // Determine final status
             $status = $this->determineServiceStatus($httpStatus, $hasValidStatus, $errorDetected);
+            $statusMessage = $this->getStatusMessage($status, $httpStatus, $errorDetected);
             
-            // Update service status
+            // Update service status and send notifications if changed
             $oldStatus = $service->status;
-            $service->update([
-                'status' => $status,
-                'status_message' => $this->getStatusMessage($status, $httpStatus, $errorDetected)
-            ]);
+            $this->updateServiceStatus($service, $status, $statusMessage);
 
             // Log the check
             StatusCheck::create([
@@ -108,10 +108,7 @@ class MonitorServices extends Command
         } catch (GuzzleException $e) {
             $this->error("Failed to monitor {$service->name}: " . $e->getMessage());
             
-            $service->update([
-                'status' => 'outage',
-                'status_message' => 'Service unreachable'
-            ]);
+            $this->updateServiceStatus($service, 'outage', 'Service unreachable');
 
             StatusCheck::create([
                 'service_id' => $service->id,
@@ -119,6 +116,44 @@ class MonitorServices extends Command
                 'error_message' => $e->getMessage(),
                 'checked_at' => now()
             ]);
+        }
+    }
+
+    /**
+     * Update service status and send notification if status changed
+     */
+    private function updateServiceStatus(Service $service, string $newStatus, string $statusMessage = ''): void
+    {
+        $previousStatus = $service->status;
+        
+        $service->update([
+            'status' => $newStatus,
+            'status_message' => $statusMessage
+        ]);
+
+        // Send notification if status changed and notifications are enabled
+        if ($previousStatus !== $newStatus && config('status.enable_email_notifications', false)) {
+            $this->sendStatusChangeNotification($service, $previousStatus, $newStatus);
+        }
+    }
+
+    /**
+     * Send status change notification via email
+     */
+    private function sendStatusChangeNotification(Service $service, string $previousStatus, string $currentStatus): void
+    {
+        try {
+            $notificationEmail = config('status.notification_email');
+            
+            if ($notificationEmail) {
+                Mail::to($notificationEmail)->send(
+                    new ServiceStatusChanged($service, $previousStatus, $currentStatus)
+                );
+                
+                $this->info("Notification sent for {$service->name} status change: {$previousStatus} → {$currentStatus}");
+            }
+        } catch (\Exception $e) {
+            $this->error("Failed to send notification for {$service->name}: " . $e->getMessage());
         }
     }
 

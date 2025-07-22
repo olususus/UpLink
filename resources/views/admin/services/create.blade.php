@@ -105,9 +105,12 @@
                     <!-- Check Interval -->
                     <div>
                         <label for="check_interval" class="block text-sm font-medium text-gray-700">Check Interval (seconds)</label>
-                        <input type="number" name="check_interval" id="check_interval" value="{{ old('check_interval', 300) }}" 
-                               min="60" max="3600" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                        <p class="mt-1 text-xs text-gray-500">How often to check the service (60-3600 seconds)</p>
+                        <input type="number" name="check_interval" id="check_interval" 
+                               value="{{ old('check_interval', config('status.default_check_interval', 300)) }}" 
+                               min="{{ config('status.min_check_interval', 60) }}" 
+                               max="{{ config('status.max_check_interval', 3600) }}" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                        <p class="mt-1 text-xs text-gray-500">How often to check the service ({{ config('status.min_check_interval', 60) }}-{{ config('status.max_check_interval', 3600) }} seconds)</p>
                         @error('check_interval')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -116,7 +119,8 @@
                     <!-- Timeout -->
                     <div>
                         <label for="timeout" class="block text-sm font-medium text-gray-700">Request Timeout (seconds)</label>
-                        <input type="number" name="timeout" id="timeout" value="{{ old('timeout', 10) }}" 
+                        <input type="number" name="timeout" id="timeout" 
+                               value="{{ old('timeout', config('status.default_timeout', 10)) }}" 
                                min="1" max="60" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <p class="mt-1 text-xs text-gray-500">How long to wait for a response (1-60 seconds)</p>
                         @error('timeout')
