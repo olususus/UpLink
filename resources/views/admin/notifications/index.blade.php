@@ -45,16 +45,16 @@
         </div>
     </div>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-6 mb-6 transition-colors duration-300">
         <div class="flex">
             <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                <svg class="h-5 w-5 text-blue-400 dark:text-blue-300" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
             </div>
             <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800">Discord Webhook Setup</h3>
-                <div class="mt-2 text-sm text-blue-700">
+                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Discord Webhook Setup</h3>
+                <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
                     <p class="mb-2">To set up Discord notifications:</p>
                     <ol class="list-decimal list-inside space-y-1">
                         <li>Go to your Discord server settings</li>
@@ -71,13 +71,13 @@
     </div>
 
     @if($settings['discord_enabled'] && $settings['discord_webhook_url'])
-    <div class="bg-white shadow rounded-lg mb-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 transition-colors duration-300">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Test Discord Integration</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Send a test message to verify your Discord webhook is working</p>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Test Discord Integration</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Send a test message to verify your Discord webhook is working</p>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
-            <button onclick="testDiscordWebhook()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+            <button onclick="testDiscordWebhook()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                 </svg>
@@ -90,12 +90,12 @@
     </div>
     @endif
 
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-3">Environment Configuration</h3>
-        <p class="text-sm text-gray-600 mb-4">Add these settings to your <code class="bg-gray-200 px-1 rounded">.env</code> file:</p>
+    <div class="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-6 transition-colors duration-300">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-3">Environment Configuration</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Add these settings to your <code class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-1 rounded">.env</code> file:</p>
         
-        <div class="bg-gray-900 rounded-md p-4 overflow-x-auto">
-            <pre class="text-green-400 text-sm"><code># Discord Notifications
+        <div class="bg-gray-900 dark:bg-gray-800 rounded-md p-4 overflow-x-auto">
+            <pre class="text-green-400 dark:text-green-300 text-sm"><code># Discord Notifications
 NOTIFICATIONS_DISCORD_ENABLED={{ $settings['discord_enabled'] ? 'true' : 'false' }}
 DISCORD_WEBHOOK_URL={{ $settings['discord_webhook_url'] ?: 'https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN' }}
 
@@ -107,18 +107,18 @@ NOTIFICATION_EMAIL={{ $settings['notification_email'] ?: 'alerts@yourcompany.com
 COMPANY_NAME="{{ config('status.company_name', 'Your Company') }}"</code></pre>
         </div>
         
-        <div class="mt-4 text-sm text-gray-600">
-            <p><strong>Note:</strong> After updating your .env file, run <code class="bg-gray-200 px-1 rounded">php artisan config:cache</code> to apply changes.</p>
+        <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+            <p><strong class="text-gray-900 dark:text-gray-100">Note:</strong> After updating your .env file, run <code class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-1 rounded">php artisan config:cache</code> to apply changes.</p>
         </div>
     </div>
 
-    <div class="mt-6 bg-white shadow rounded-lg">
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg transition-colors duration-300">
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Discord Message Preview</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">This is how status change notifications will appear in Discord</p>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Discord Message Preview</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">This is how status change notifications will appear in Discord</p>
         </div>
-        <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
-            <div class="bg-gray-100 rounded-lg p-4">
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 transition-colors duration-300">
                 <div class="flex items-start space-x-3">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -127,27 +127,26 @@ COMPANY_NAME="{{ config('status.company_name', 'Your Company') }}"</code></pre>
                     </div>
                     <div class="flex-1">
                         <div class="flex items-center space-x-2">
-                            <span class="font-medium text-gray-900">{{ config('status.company_name', 'Status Monitor') }}</span>
-                            <span class="text-xs text-gray-500">Today at 12:34 PM</span>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">{{ config('status.company_name', 'Status Monitor') }}</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Today at 12:34 PM</span>
                         </div>
-                        <div class="mt-2 bg-white border-l-4 border-red-500 rounded p-3">
+                        <div class="mt-2 bg-white dark:bg-gray-800 border-l-4 border-red-500 rounded p-3">
                             <div class="flex items-center mb-2">
-                                <span class="text-lg mr-2">🚨</span>
-                                <span class="font-semibold text-gray-900">Service Status Update</span>
+                                <span class="font-semibold text-gray-900 dark:text-gray-100">Service Status Update</span>
                             </div>
-                            <p class="text-gray-700 mb-3"><strong>Main Website</strong> status has changed</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3"><strong>Main Website</strong> status has changed</p>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">📊 Previous Status</span>
-                                    <span class="font-medium">✅ <strong>Operational</strong></span>
+                                    <span class="text-gray-600 dark:text-gray-400">Previous Status</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100"><strong>Operational</strong></span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">🔄 Current Status</span>
-                                    <span class="font-medium">🚨 <strong>Outage</strong></span>
+                                    <span class="text-gray-600 dark:text-gray-400">Current Status</span>
+                                    <span class="font-medium text-gray-900 dark:text-gray-100"><strong>Outage</strong></span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">🔗 Service URL</span>
-                                    <span class="text-blue-600">https://yoursite.com</span>
+                                    <span class="text-gray-600 dark:text-gray-400">Service URL</span>
+                                    <span class="text-blue-600 dark:text-blue-400">https://yoursite.com</span>
                                 </div>
                             </div>
                         </div>

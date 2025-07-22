@@ -21,7 +21,23 @@ class Service extends Model
         'http_headers',
         'timeout',
         'follow_redirects',
-        'expected_status_codes'
+        'expected_status_codes',
+        'content_checks',
+        'ssl_monitoring',
+        'dns_monitoring',
+        'port_monitoring',
+        'response_time_threshold',
+        'performance_thresholds',
+        'retry_attempts',
+        'retry_delay',
+        'consecutive_failures_threshold',
+        'monitoring_regions',
+        'auth_config',
+        'custom_scripts',
+        'webhook_config',
+        'maintenance_windows',
+        'alert_escalation',
+        'notification_preferences'
     ];
 
     protected $casts = [
@@ -30,7 +46,23 @@ class Service extends Model
         'error_patterns' => 'array',
         'http_headers' => 'array',
         'timeout' => 'integer',
-        'follow_redirects' => 'boolean'
+        'follow_redirects' => 'boolean',
+        'content_checks' => 'array',
+        'ssl_monitoring' => 'array',
+        'dns_monitoring' => 'array',
+        'port_monitoring' => 'array',
+        'response_time_threshold' => 'integer',
+        'performance_thresholds' => 'array',
+        'retry_attempts' => 'integer',
+        'retry_delay' => 'integer',
+        'consecutive_failures_threshold' => 'integer',
+        'monitoring_regions' => 'array',
+        'auth_config' => 'array',
+        'custom_scripts' => 'array',
+        'webhook_config' => 'array',
+        'maintenance_windows' => 'array',
+        'alert_escalation' => 'array',
+        'notification_preferences' => 'array'
     ];
 
     public function incidents(): HasMany

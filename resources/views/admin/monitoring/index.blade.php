@@ -57,57 +57,57 @@
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900">
-            <h2 class="text-xl font-semibold mb-4">📊 Current Service Status</h2>
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
+        <div class="p-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">📊 Current Service Status</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 @foreach($services as $service)
-                    <div class="border rounded-lg p-4">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-semibold">{{ $service->name }}</h3>
+                            <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ $service->name }}</h3>
                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
-                                {{ $service->status === 'operational' ? 'bg-green-100 text-green-800' : '' }}
-                                {{ $service->status === 'maintenance' ? 'bg-blue-100 text-blue-800' : '' }}
-                                {{ $service->status === 'degraded' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                {{ $service->status === 'outage' ? 'bg-red-100 text-red-800' : '' }}">
+                                {{ $service->status === 'operational' ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : '' }}
+                                {{ $service->status === 'maintenance' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300' : '' }}
+                                {{ $service->status === 'degraded' ? 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300' : '' }}
+                                {{ $service->status === 'outage' ? 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300' : '' }}">
                                 {{ ucfirst($service->status) }}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-600">{{ $service->status_message ?? 'No status message' }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Updated: {{ $service->updated_at->diffForHumans() }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $service->status_message ?? 'No status message' }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Updated: {{ $service->updated_at->diffForHumans() }}</p>
                     </div>
                 @endforeach
             </div>
         </div>
     </div>
 
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-        <div class="p-6 text-gray-900">
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
+        <div class="p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold">📋 Recent Status Checks (Last 50)</h2>
-                <button onclick="location.reload()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">📋 Recent Status Checks (Last 50)</h2>
+                <button onclick="location.reload()" class="bg-gray-500 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                     Refresh
                 </button>
             </div>
 
             @if($recentChecks->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">HTTP</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Response Time</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Error</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Service</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">HTTP</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Response Time</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Error</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($recentChecks as $check)
-                                <tr class="{{ $loop->iteration <= 10 ? 'bg-blue-50' : '' }}">
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <tr class="{{ $loop->iteration <= 10 ? 'bg-blue-50 dark:bg-blue-900/20' : '' }}">
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                         {{ $check->checked_at->format('M j, H:i:s') }}
                                         @if($loop->iteration <= 10)
                                             <span class="inline-flex px-2 py-0.5 text-xs font-semibold rounded bg-blue-100 text-blue-800 ml-2">Latest 10</span>

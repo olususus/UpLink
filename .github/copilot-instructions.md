@@ -47,3 +47,5 @@ Set via environment variables:
 -   Custom error monitoring patterns can be configured per service
 -   Incident descriptions are always added manually
 -   Status updates are automatic for monitored services, manual for others
+
+DO NOT PUT USELESS COMMENTS IN ANY FILES. USE COMMENTS ONLY WHERE NECESSARY. SAME WITH EMOJIS
