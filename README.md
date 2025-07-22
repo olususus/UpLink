@@ -1,4 +1,8 @@
-# Status Monitor
+<img width="1140" height="71" alt="uplink-logo" src="https://github.com/user-attachments/assets/09962b5d-b89c-42f9-b3f5-b0797edd00e8" />
+
+---
+
+<img width="1877" height="958" alt="image" src="https://github.com/user-attachments/assets/9e20ee2f-7acf-4567-b38f-0f05c86cbca0" />
 
 A professional Laravel-based status monitoring application for tracking service uptime and managing incidents. Built for organizations that need reliable monitoring with customizable error detection and automated alerts.
 
