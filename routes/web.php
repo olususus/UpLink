@@ -23,6 +23,7 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('services', ServiceController::class);
+    Route::get('/services/advanced-create', [ServiceController::class, 'advancedCreate'])->name('services.advanced-create');
     Route::resource('incidents', IncidentController::class);
     Route::patch('services/{service}/status', [ServiceController::class, 'updateStatus'])->name('services.status');
     Route::patch('incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('incidents.resolve');

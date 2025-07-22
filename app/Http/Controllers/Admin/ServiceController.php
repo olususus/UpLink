@@ -27,6 +27,14 @@ class ServiceController extends Controller
     }
 
     /**
+     * Show the advanced form for creating a new resource.
+     */
+    public function advancedCreate()
+    {
+        return view('admin.services.advanced-create');
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)

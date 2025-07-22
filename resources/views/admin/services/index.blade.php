@@ -9,9 +9,14 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Services Management</h1>
             <p class="text-gray-600 dark:text-gray-400">Manage and monitor your services</p>
         </div>
-        <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
-            Add Service
-        </a>
+        <div class="flex space-x-3">
+            <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                Add Service
+            </a>
+            <a href="{{ route('admin.services.advanced-create') }}" class="inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-gray-700 transition-colors duration-200">
+                Advanced Create
+            </a>
+        </div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md transition-colors duration-300">
