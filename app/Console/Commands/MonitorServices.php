@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Service;
 use App\Models\StatusCheck;
 use App\Mail\ServiceStatusChanged;
+use App\Services\DiscordNotificationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
@@ -12,18 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class MonitorServices extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'status:monitor';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Monitor automatic services and update their status';
 
     private Client $httpClient;
@@ -137,23 +127,36 @@ class MonitorServices extends Command
         }
     }
 
-    /**
-     * Send status change notification via email
-     */
     private function sendStatusChangeNotification(Service $service, string $previousStatus, string $currentStatus): void
     {
         try {
             $notificationEmail = config('status.notification_email');
             
-            if ($notificationEmail) {
+            if ($notificationEmail && config('status.enable_email_notifications', false)) {
                 Mail::to($notificationEmail)->send(
                     new ServiceStatusChanged($service, $previousStatus, $currentStatus)
                 );
                 
-                $this->info("Notification sent for {$service->name} status change: {$previousStatus} → {$currentStatus}");
+                $this->info("Email notification sent for {$service->name} status change: {$previousStatus} → {$currentStatus}");
             }
         } catch (\Exception $e) {
-            $this->error("Failed to send notification for {$service->name}: " . $e->getMessage());
+            $this->error("Failed to send email notification for {$service->name}: " . $e->getMessage());
+        }
+
+        // Send Discord notification
+        try {
+            if (config('status.notifications.discord_enabled', false)) {
+                $discordService = new DiscordNotificationService();
+                $success = $discordService->sendStatusChangeNotification($service, $previousStatus, $currentStatus);
+                
+                if ($success) {
+                    $this->info("Discord notification sent for {$service->name} status change: {$previousStatus} → {$currentStatus}");
+                } else {
+                    $this->warn("Discord notification failed for {$service->name}");
+                }
+            }
+        } catch (\Exception $e) {
+            $this->error("Failed to send Discord notification for {$service->name}: " . $e->getMessage());
         }
     }
 

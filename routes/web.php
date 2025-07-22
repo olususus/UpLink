@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\IncidentController;
 use App\Http\Controllers\Admin\MonitoringController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::post('/monitoring/test-api', [MonitoringController::class, 'testMaintenanceAPI'])->name('monitoring.test-api');
     Route::post('/monitoring/manual-check', [MonitoringController::class, 'manualCheck'])->name('monitoring.manual-check');
+    
+    // Notification routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/test-discord', [NotificationController::class, 'testDiscord'])->name('notifications.test-discord');
+    Route::patch('/notifications/settings', [NotificationController::class, 'updateSettings'])->name('notifications.update-settings');
 });
 
 // Breeze dashboard route (redirect to admin)

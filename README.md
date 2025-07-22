@@ -180,8 +180,15 @@ SHOW_UPTIME_PERCENTAGE=true
 ### Email Notifications
 
 ```bash
-ENABLE_EMAIL_NOTIFICATIONS=true
+NOTIFICATIONS_EMAIL_ENABLED=true
 NOTIFICATION_EMAIL=alerts@yourcompany.com
+```
+
+### Discord Notifications
+
+```bash
+NOTIFICATIONS_DISCORD_ENABLED=true
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
 ```
 
 ### Data Retention

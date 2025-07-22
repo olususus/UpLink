@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,16 +33,28 @@
             .bg-status-outage { background-color: var(--color-danger) !important; }
             .bg-status-maintenance { background-color: var(--color-info) !important; }
         </style>
+
+        <!-- Dark Mode Script -->
+        <script>
+            // Check for saved theme preference or default to system preference
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && {{ config('status.dark_mode.default_dark_mode', 'false') ? 'true' : 'false' }})) {
+                document.documentElement.classList.add('dark')
+            } else {
+                document.documentElement.classList.remove('dark')
+            }
+        </script>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white shadow">
+                <header class="bg-white dark:bg-gray-800 shadow transition-colors duration-300">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                        <div class="text-gray-900 dark:text-white">
+                            {{ $header }}
+                        </div>
                     </div>
                 </header>
             @endisset
@@ -53,21 +65,21 @@
             </main>
             
             <!-- Footer with company info -->
-            <footer class="bg-white border-t border-gray-200 mt-8">
+            <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-8 transition-colors duration-300">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between items-center text-sm text-gray-600">
+                    <div class="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
                         <div>
                             <p>&copy; {{ date('Y') }} {{ config('status.company_name', config('app.name')) }}. All rights reserved.</p>
                         </div>
                         <div class="flex space-x-4">
                             @if(config('status.support_url'))
-                                <a href="{{ config('status.support_url') }}" class="hover:text-blue-600">Support</a>
+                                <a href="{{ config('status.support_url') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Support</a>
                             @endif
                             @if(config('status.support_email'))
-                                <a href="mailto:{{ config('status.support_email') }}" class="hover:text-blue-600">Contact</a>
+                                <a href="mailto:{{ config('status.support_email') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Contact</a>
                             @endif
                             @if(config('status.twitter_handle'))
-                                <a href="https://twitter.com/{{ config('status.twitter_handle') }}" class="hover:text-blue-600">Twitter</a>
+                                <a href="https://twitter.com/{{ config('status.twitter_handle') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Twitter</a>
                             @endif
                         </div>
                     </div>

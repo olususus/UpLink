@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Incident;
 use App\Models\Service;
+use App\Services\DiscordNotificationService;
 use Illuminate\Http\Request;
 
 class IncidentController extends Controller
@@ -59,6 +60,23 @@ class IncidentController extends Controller
             'status' => $request->status,
             'started_at' => $request->started_at,
         ]);
+
+        // Send Discord notification for new incident
+        if (config('status.notifications.discord_enabled', false)) {
+            try {
+                $discordService = new DiscordNotificationService();
+                $service = Service::find($request->service_id);
+                $discordService->sendIncidentNotification(
+                    $request->title,
+                    $request->description,
+                    $request->status,
+                    $service
+                );
+            } catch (\Exception $e) {
+                // Log error but don't fail the incident creation
+                \Log::error("Failed to send Discord notification for incident: " . $e->getMessage());
+            }
+        }
 
         return redirect()->route('admin.incidents.index')
             ->with('success', 'Incident created successfully.');
