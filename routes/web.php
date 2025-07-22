@@ -1,14 +1,30 @@
 <?php
 
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\IncidentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Public status page
+Route::get('/', [StatusController::class, 'index'])->name('status.index');
+
+// Authentication routes
+require __DIR__.'/auth.php';
+
+// Admin routes
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('services', ServiceController::class);
+    Route::resource('incidents', IncidentController::class);
+    Route::patch('services/{service}/status', [ServiceController::class, 'updateStatus'])->name('services.status');
+    Route::post('incidents/{incident}/resolve', [IncidentController::class, 'resolve'])->name('incidents.resolve');
 });
 
+// Breeze dashboard route (redirect to admin)
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -16,6 +32,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-// Authentication routes
 require __DIR__.'/auth.php';
