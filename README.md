@@ -1,12 +1,29 @@
-git clone https://github.com/your-username/status-monitor.git
+<img width="1140" height="71" alt="uplink-logo" src="https://github.com/user-attachments/assets/09962b5d-b89c-42f9-b3f5-b0797edd00e8" />
 
-# Status Monitoring - Quick Setup
+---
 
-A professional Laravel-based status monitoring application.
+<img width="1877" height="958" alt="image" src="https://github.com/user-attachments/assets/9e20ee2f-7acf-4567-b38f-0f05c86cbca0" />
+
+A professional Laravel-based status monitoring application for tracking service uptime and managing incidents. Built for organizations that need reliable monitoring with customizable error detection and automated alerts.
+
+## Features
+
+---
+
+## Features
+
+-   HTTP/HTTPS monitoring for websites, APIs, and web services (configurable intervals)
+-   Advanced error detection (custom regex patterns, status code validation)
+-   Incident management: track, document, and resolve service incidents
+-   Automated email and Discord notifications for downtime and recovery
+-   Uptime tracking: historical uptime percentages and response time metrics
+-   Admin dashboard for managing services and incidents
+-   Customizable interface: theme colors, branding, auto-refresh
+-   Data retention: configurable cleanup of old incidents and monitoring data
 
 ## Requirements
 
--   PHP 8.2 or higher
+-   PHP 8.1 or higher
 -   MySQL 5.7+ or PostgreSQL 10+
 -   Composer
 -   Node.js 16+ and npm
@@ -14,40 +31,93 @@ A professional Laravel-based status monitoring application.
 
 ## Installation
 
+### Quick Setup
+
 ```bash
-git clone https://github.com/DBus-World/Status.git
-cd Status
+# Clone the repository
+git clone https://github.com/your-username/status-monitor.git
+cd status-monitor
+
+# Install PHP dependencies
 composer install
+
+# Install Node.js dependencies
 npm install
+
+# Copy environment file
 cp .env.example .env
+
+# Generate application key
 php artisan key:generate
-# Edit .env for your DB and mail settings
-php artisan migrate --seed
+
+# Configure your database in .env file
+# Then run migrations
+php artisan migrate
+
+# Create admin user and seed sample services
+php artisan db:seed
+
+# Build frontend assets
 npm run build
+
+# Set up cron job for monitoring (see Scheduling section)
 ```
 
-## Scheduling
+### Environment Configuration
 
-To enable automatic monitoring, set up a cron job:
+Configure these essential variables in your `.env` file:
+
+```bash
+# Application
+APP_NAME="Your Status Page"
+APP_URL=https://status.yourcompany.com
+
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=status_monitor
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+# Admin Account
+ADMIN_EMAIL=admin@yourcompany.com
+ADMIN_PASSWORD=secure_password_here
+
+# Email (for notifications)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.yourprovider.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+```
+
+### Scheduling
+
+Add this cron job to run monitoring checks every 5 minutes:
 
 ```bash
 * * * * * cd /path/to/your/project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-Or run manually:
+Or manually run monitoring:
 
 ```bash
 php artisan status:monitor
 ```
 
-## Support & Community
+## Service Configuration
 
--   [Join our Discord](https://discord.gg/ZXjeKkNQDF)
--   Issues: Use GitHub Issues
+### Basic Service Setup
 
----
+Access the admin panel at `/admin` to configure monitored services:
 
-_Made by sprawdzany_
+| Field          | Description            | Example                |
+| -------------- | ---------------------- | ---------------------- |
+| Name           | Service identifier     | "Main Website"         |
+| URL            | Endpoint to monitor    | `https://yoursite.com` |
+| Check Interval | Seconds between checks | `300` (5 minutes)      |
+| Timeout        | Request timeout        | `10` seconds           |
 
 ### Advanced Monitoring Options
 
@@ -288,7 +358,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 -   **Documentation**: See `/docs` directory
 -   **Issues**: Report bugs on GitHub Issues
--   **Community & Help**: [Join our Discord](https://discord.gg/ZXjeKkNQDF)
 
 ---
 
