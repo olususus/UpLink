@@ -358,7 +358,8 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 -   **Documentation**: See `/docs` directory
 -   **Issues**: Report bugs on GitHub Issues
+-   **Support**: [Join The Discord](https://discord.gg/ZXjeKkNQDF)
 
 ---
 
-_Made by sprawdzany_
+_Made by Sprawdzany_
