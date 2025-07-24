@@ -39,12 +39,13 @@ class Service extends Model
         'consecutive_failures_threshold',
         'ssl_monitoring',
         'auth_config',
-        'maintenance_windows'
+        'maintenance_windows',
+        'tags',
+        'custom_fields',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'ssl_verify' => 'boolean',
         'check_interval' => 'integer',
         'error_patterns' => 'array',
         'http_headers' => 'array',
@@ -63,17 +64,16 @@ class Service extends Model
         'retry_delay' => 'integer',
         'consecutive_failures_threshold' => 'integer',
         'monitoring_regions' => 'array',
-        'auth_config' => 'array',
         'custom_scripts' => 'array',
         'webhook_config' => 'array',
-        'maintenance_windows' => 'array',
         'alert_escalation' => 'array',
         'notification_preferences' => 'array',
-        // New scheduling fields
         'last_checked_at' => 'datetime',
         'next_check_at' => 'datetime',
         'priority' => 'integer',
-        'schedule_config' => 'array'
+        'schedule_config' => 'array',
+        'tags' => 'array',
+        'custom_fields' => 'array',
     ];
 
     public function incidents(): HasMany
@@ -127,8 +127,9 @@ class Service extends Model
             ->where('checked_at', '>=', $startDate)
             ->count();
 
+        // If no checks, assume 100% uptime (new service or no data)
         if ($totalChecks === 0) {
-            return 0.0;
+            return 100.0;
         }
 
         $successfulChecks = $this->statusChecks()

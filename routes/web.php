@@ -28,10 +28,19 @@ Route::get('/health', [HealthController::class, 'check'])->name('health.check');
 require __DIR__.'/auth.php';
 
 // Admin routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:administrator,service_manager,status_manager,incident_creator'])->prefix('admin')->name('admin.')->group(function () {
+    // User management (admin only)
+    Route::middleware('role:administrator')->group(function () {
+        Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+        // Settings routes
+        Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+        Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Services routes (custom routes before resource)
     Route::get('/services/advanced-create', [ServiceController::class, 'advancedCreate'])->name('services.advanced-create');
+    // Override the default create route to use advancedCreate (fixes missing view error)
+    Route::get('/services/create', [ServiceController::class, 'advancedCreate'])->name('services.create');
     Route::get('/services/advanced-create-json', [ServiceController::class, 'advancedCreateJson'])->name('services.advanced-create-json');
     Route::resource('services', ServiceController::class);
     Route::patch('services/{service}/status', [ServiceController::class, 'updateStatus'])->name('services.status');
@@ -46,9 +55,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/notifications/test-discord', [NotificationController::class, 'testDiscord'])->name('notifications.test-discord');
     Route::patch('/notifications/settings', [NotificationController::class, 'updateSettings'])->name('notifications.update-settings');
 
-    // Settings routes
-    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
-    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    // Analytics route
+    Route::get('/analytics', function () {
+        $services = \App\Models\Service::withCount(['incidents', 'statusChecks'])->get();
+        return view('admin.services.analytics', compact('services'));
+    })->name('analytics');
 });
 
 // Breeze dashboard route (redirect to admin)

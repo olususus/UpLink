@@ -23,6 +23,7 @@
                                 <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Services</a>
                                 <a href="{{ route('admin.incidents.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Incidents</a>
                                 <a href="{{ route('admin.monitoring.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Monitoring</a>
+                                <a href="{{ route('admin.analytics') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Analytics</a>
                                 <a href="{{ route('admin.notifications.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Notifications</a>
                                 <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
                             </div>
@@ -164,7 +165,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-center">
             <p class="text-sm text-gray-600 dark:text-gray-400">
-                Made with  by 
+                Made with ❤️ by 
                 <a href="https://sprawdzany.rocks" 
                    target="_blank" 
                    rel="noopener noreferrer"

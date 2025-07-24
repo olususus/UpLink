@@ -25,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
                 SmartSchedulerCommand::class,
             ]);
         }
+
+        // Explicitly register 'role' middleware alias if not already registered
+        $router = $this->app['router'];
+        $router->aliasMiddleware('role', \App\Http\Middleware\RoleMiddleware::class);
     }
 }

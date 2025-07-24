@@ -11,13 +11,15 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $settings = [
-            'email_enabled' => config('status.enable_email_notifications', false),
-            'discord_enabled' => config('status.notifications.discord_enabled', false),
-            'discord_webhook_url' => config('status.notifications.discord_webhook_url'),
-            'notification_email' => config('status.notification_email'),
+        $keys = [
+            'email_enabled', 'slack_enabled', 'discord_enabled', 'discord_webhook_url',
+            'notification_email', 'support_email'
         ];
-
+        $settings = \App\Models\Setting::whereIn('key', $keys)->pluck('value', 'key')->toArray();
+        // Ensure booleans are cast
+        $settings['email_enabled'] = ($settings['email_enabled'] ?? '0') == '1';
+        $settings['slack_enabled'] = ($settings['slack_enabled'] ?? '0') == '1';
+        $settings['discord_enabled'] = ($settings['discord_enabled'] ?? '0') == '1';
         return view('admin.notifications.index', compact('settings'));
     }
 
