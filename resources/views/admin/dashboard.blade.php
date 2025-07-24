@@ -69,7 +69,7 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                            <span class="text-white font-bold">✓</span>
+                            <span class="text-white font-bold"></span>
                         </div>
                     </div>
                     <div class="ml-5 w-0 flex-1">

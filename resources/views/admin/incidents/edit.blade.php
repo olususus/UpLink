@@ -115,11 +115,11 @@
                 <div>
                     @if($incident->is_resolved)
                         <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                            ✓ Resolved
+                            Resolved
                         </span>
                     @else
                         <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">
-                            ⚠ Active
+                            Active
                         </span>
                     @endif
                 </div>

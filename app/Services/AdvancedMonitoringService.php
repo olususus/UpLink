@@ -105,6 +105,22 @@ class AdvancedMonitoringService
         // Build HTTP client with custom configuration
         $client = Http::timeout($service->timeout ?? 10);
         
+        // Disable SSL verification for development (must be done before other options)
+        $options = [
+            'verify' => false,
+            'curl' => [
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+            ]
+        ];
+        
+        // Configure redirects
+        if (!($service->follow_redirects ?? true)) {
+            $options['allow_redirects'] = false;
+        }
+        
+        $client = $client->withOptions($options);
+        
         // Add custom headers
         if ($service->http_headers) {
             foreach ($service->http_headers as $key => $value) {
@@ -115,11 +131,6 @@ class AdvancedMonitoringService
         // Add authentication
         if ($service->auth_config) {
             $client = $this->addAuthentication($client, $service->auth_config);
-        }
-
-        // Configure redirects
-        if (!($service->follow_redirects ?? true)) {
-            $client = $client->withOptions(['allow_redirects' => false]);
         }
 
         try {

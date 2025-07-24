@@ -12,7 +12,7 @@
     <div class="space-y-6">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
             <div class="p-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">🔧 Manual Testing Tools</h2>
+                <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Manual Testing Tools</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -59,7 +59,7 @@
 
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
         <div class="p-6">
-            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">📊 Current Service Status</h2>
+            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Current Service Status</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 @foreach($services as $service)
@@ -85,7 +85,7 @@
     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg transition-colors duration-300">
         <div class="p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">📋 Recent Status Checks (Last 50)</h2>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Recent Status Checks (Last 50)</h2>
                 <button onclick="location.reload()" class="bg-gray-500 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
                     Refresh
                 </button>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\StatusCheck;
 use App\Models\Service;
+use App\Services\AdvancedMonitoringService;
+use App\Services\SmartSchedulerService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
@@ -37,7 +39,14 @@ class MonitoringController extends Controller
             return response()->json(['error' => 'Service has no URL configured'], 400);
         }
 
-        $client = new Client(['timeout' => 10]);
+        $client = new Client([
+            'timeout' => 10,
+            'verify' => false, // Disable SSL verification for development
+            'curl' => [
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
+            ]
+        ]);
         $result = [
             'service' => $service->name,
             'base_url' => $service->url,
@@ -52,6 +61,11 @@ class MonitoringController extends Controller
             try {
                 $response = $client->get($maintenanceUrl, [
                     'timeout' => 5,
+                    'verify' => false,
+                    'curl' => [
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                    ],
                     'headers' => [
                         'Accept' => 'application/json',
                         'User-Agent' => 'DBusWorld-Status-Monitor/1.0'
@@ -133,7 +147,7 @@ class MonitoringController extends Controller
     /**
      * Run a manual check for a service
      */
-    public function manualCheck(Request $request)
+    public function manualCheck(Request $request, SmartSchedulerService $scheduler)
     {
         $service = Service::findOrFail($request->service_id);
         
@@ -141,91 +155,24 @@ class MonitoringController extends Controller
             return response()->json(['error' => 'Service is not configured for automatic monitoring'], 400);
         }
 
-        // Run the monitoring logic
-        $client = new Client(['timeout' => 10]);
-        
         try {
-            $start = microtime(true);
-            
-            // Check maintenance API for DBusWorld website
-            if ($service->slug === 'dbusworld-website') {
-                $maintenanceStatus = $this->checkMaintenanceAPI($service->url, $client);
-                if ($maintenanceStatus) {
-                    $responseTime = (int)((microtime(true) - $start) * 1000);
-                    
-                    $service->update([
-                        'status' => 'maintenance',
-                        'status_message' => $maintenanceStatus['message'] ?? 'Website is under maintenance'
-                    ]);
-
-                    StatusCheck::create([
-                        'service_id' => $service->id,
-                        'status' => 'maintenance',
-                        'response_time' => $responseTime,
-                        'http_status' => 503,
-                        'checked_at' => now()
-                    ]);
-
-                    return response()->json([
-                        'success' => true,
-                        'status' => 'maintenance',
-                        'message' => 'Service status updated to maintenance (API detected)',
-                        'response_time' => $responseTime
-                    ]);
-                }
-            }
-            
-            // Regular HTTP check
-            $response = $client->get($service->url);
-            $responseTime = (int)((microtime(true) - $start) * 1000);
-            $httpStatus = $response->getStatusCode();
-            
-            $status = match(true) {
-                $httpStatus >= 200 && $httpStatus < 300 => 'operational',
-                $httpStatus === 503 => 'maintenance',
-                $httpStatus >= 400 && $httpStatus < 500 => 'degraded',
-                default => 'outage'
-            };
-            
-            $service->update([
-                'status' => $status,
-                'status_message' => "HTTP {$httpStatus}"
-            ]);
-
-            StatusCheck::create([
-                'service_id' => $service->id,
-                'status' => $status,
-                'response_time' => $responseTime,
-                'http_status' => $httpStatus,
-                'checked_at' => now()
-            ]);
+            // Use the smart scheduler for manual checks
+            $scheduler->triggerManualCheck($service);
 
             return response()->json([
                 'success' => true,
-                'status' => $status,
-                'message' => "Service status updated to {$status}",
-                'http_status' => $httpStatus,
-                'response_time' => $responseTime
+                'status' => 'triggered',
+                'message' => 'Manual check triggered successfully. Check will be processed ' . 
+                           ($service->use_queue ? 'in background queue' : 'immediately'),
+                'queued' => $service->use_queue
             ]);
 
-        } catch (GuzzleException $e) {
-            $service->update([
-                'status' => 'outage',
-                'status_message' => 'Service unreachable'
-            ]);
-
-            StatusCheck::create([
-                'service_id' => $service->id,
-                'status' => 'outage',
-                'error_message' => $e->getMessage(),
-                'checked_at' => now()
-            ]);
-
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'status' => 'outage',
-                'message' => 'Service unreachable: ' . $e->getMessage()
-            ]);
+                'status' => 'error',
+                'message' => 'Failed to trigger manual check: ' . $e->getMessage()
+            ], 500);
         }
     }
 

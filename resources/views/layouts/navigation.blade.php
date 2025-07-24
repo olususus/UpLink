@@ -1,31 +1,37 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors duration-300">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('status.index') }}" class="flex items-center">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xl font-bold text-gray-900 dark:text-white">{{ config('status.site.title', 'Status Monitor') }}</span>
-                            <span class="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">{{ config('status.site.description', 'Status') }}</span>
-                        </div>
-                    </a>
-                </div>
-
+        <div class="flex justify-between items-center h-16">
+            <!-- Left: Logo & Title -->
+            <div class="flex items-center space-x-6">
+                <a href="{{ route('status.index') }}" class="flex items-center group">
+                    <span class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-wide group-hover:text-blue-800 dark:group-hover:text-blue-200 transition">UpLink</span>
+                </a>
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="flex items-center space-x-6">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     @auth
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                            {{ __('Admin') }}
-                        </x-nav-link>
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open" @keydown.escape="open = false" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none transition">
+                                {{ __('Admin') }}
+                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg z-50" x-cloak>
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
+                                <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Services</a>
+                                <a href="{{ route('admin.incidents.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Incidents</a>
+                                <a href="{{ route('admin.monitoring.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Monitoring</a>
+                                <a href="{{ route('admin.notifications.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Notifications</a>
+                                <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
+                            </div>
+                        </div>
                     @endauth
                 </div>
             </div>
 
+            <!-- Right: Controls -->
             <div class="flex items-center space-x-4">
                 @if(config('status.dark_mode.enabled', true))
                     <!-- Dark Mode Toggle -->
@@ -103,9 +109,26 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                {{ __('Admin') }}
-            </x-responsive-nav-link>
+            @auth
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    Admin Dashboard
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
+                    Services
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.incidents.index')" :active="request()->routeIs('admin.incidents.*')">
+                    Incidents
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.monitoring.index')" :active="request()->routeIs('admin.monitoring.*')">
+                    Monitoring
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.notifications.index')" :active="request()->routeIs('admin.notifications.*')">
+                    Notifications
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.*')">
+                    Settings
+                </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
@@ -141,7 +164,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-center">
             <p class="text-sm text-gray-600 dark:text-gray-400">
-                Made with ❤️ by 
+                Made with  by 
                 <a href="https://sprawdzany.rocks" 
                    target="_blank" 
                    rel="noopener noreferrer"

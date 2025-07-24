@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('title', '- Status')
 
@@ -11,7 +11,7 @@
                 <div class="flex">
                     <div class="flex-shrink-0">
                         <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200">
-                            ⚠ Setup Required
+                            Setup Required
                         </span>
                     </div>
                     <div class="ml-5 w-0 flex-1">
@@ -41,10 +41,10 @@
                         };
                         
                         $statusIcon = match($overallStatus) {
-                            'operational' => '✓',
-                            'degraded' => '⚠',
-                            'maintenance' => '🔧',
-                            'outage' => '✗',
+                            'operational' => '',
+                            'degraded' => '',
+                            'maintenance' => '',
+                            'outage' => '',
                             default => '?'
                         };
                         

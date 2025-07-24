@@ -8,14 +8,18 @@ A professional Laravel-based status monitoring application for tracking service 
 
 ## Features
 
--   **HTTP/HTTPS Monitoring**: Monitor websites, APIs, and web services with configurable intervals
--   **Advanced Error Detection**: Custom regex patterns and status code validation
--   **Incident Management**: Track, document, and resolve service incidents
--   **Email Notifications**: Automated alerts when services go down or recover
--   **Uptime Tracking**: Historical uptime percentages and response time metrics
--   **Admin Dashboard**: Web-based interface for managing services and incidents
--   **Customizable Interface**: Theme colors, company branding, and auto-refresh options
--   **Data Retention**: Configurable cleanup of old incidents and monitoring data
+---
+
+## Features
+
+-   HTTP/HTTPS monitoring for websites, APIs, and web services (configurable intervals)
+-   Advanced error detection (custom regex patterns, status code validation)
+-   Incident management: track, document, and resolve service incidents
+-   Automated email and Discord notifications for downtime and recovery
+-   Uptime tracking: historical uptime percentages and response time metrics
+-   Admin dashboard for managing services and incidents
+-   Customizable interface: theme colors, branding, auto-refresh
+-   Data retention: configurable cleanup of old incidents and monitoring data
 
 ## Requirements
 

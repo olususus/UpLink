@@ -11,10 +11,10 @@
         </div>
         <div class="flex space-x-3">
             <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
-                Add Service
+                Simple Service
             </a>
-            <a href="{{ route('admin.services.advanced-create') }}" class="inline-flex items-center px-4 py-2 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-gray-700 transition-colors duration-200">
-                Advanced Create
+            <a href="{{ route('admin.services.advanced-create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors duration-200">
+                Advanced Monitoring
             </a>
         </div>
     </div>
