@@ -208,17 +208,7 @@
                             @enderror
                         </div>
 
-                        <div class="flex items-center">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="ssl_verify" id="ssl_verify" value="1" 
-                                       {{ old('ssl_verify', $service->ssl_verify ?? true) ? 'checked' : '' }}
-                                       class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Verify SSL Certificate</span>
-                            </label>
-                            @error('ssl_verify')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <!-- Removed ssl_verify checkbox: not present in DB -->
                     </div>
 
                     <!-- Custom Headers -->
@@ -226,14 +216,14 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Custom HTTP Headers</label>
                         <div id="headers-container">
                             @php
-                                $headers = old('headers', $service->headers ?? []);
+                                $headers = old('http_headers', $service->http_headers ?? []);
                             @endphp
                             @if(!empty($headers))
                                 @foreach($headers as $key => $value)
                                 <div class="header-row flex gap-3 mb-3">
-                                    <input type="text" name="headers[{{ $loop->index }}][key]" value="{{ $key }}" placeholder="Header Name" 
+                                    <input type="text" name="http_headers[{{ $loop->index }}][key]" value="{{ $key }}" placeholder="Header Name" 
                                            class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    <input type="text" name="headers[{{ $loop->index }}][value]" value="{{ $value }}" placeholder="Header Value" 
+                                    <input type="text" name="http_headers[{{ $loop->index }}][value]" value="{{ $value }}" placeholder="Header Value" 
                                            class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <button type="button" class="remove-header bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded"></button>
                                 </div>
@@ -297,7 +287,7 @@
                         <div>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ssl_enabled" id="ssl_enabled" value="1" 
-                                       {{ old('ssl_enabled', $service->ssl_monitoring['enabled'] ?? true) ? 'checked' : '' }}
+                                       {{ old('ssl_enabled', isset($service->ssl_monitoring['enabled']) ? $service->ssl_monitoring['enabled'] : true) ? 'checked' : '' }}
                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                 <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Enable SSL monitoring</span>
                             </label>
@@ -306,7 +296,7 @@
                         <div>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ssl_check_expiry" id="ssl_check_expiry" value="1" 
-                                       {{ old('ssl_check_expiry', $service->ssl_monitoring['check_expiry'] ?? true) ? 'checked' : '' }}
+                                       {{ old('ssl_check_expiry', isset($service->ssl_monitoring['check_expiry']) ? $service->ssl_monitoring['check_expiry'] : true) ? 'checked' : '' }}
                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                 <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Check certificate expiry</span>
                             </label>
@@ -315,7 +305,7 @@
                         <div>
                             <label for="ssl_warning_days" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Warn when expires in (days)</label>
                             <input type="number" name="ssl_warning_days" id="ssl_warning_days" 
-                                   value="{{ old('ssl_warning_days', $service->ssl_monitoring['warning_days'] ?? 30) }}" min="1" max="365"
+                                   value="{{ old('ssl_warning_days', isset($service->ssl_monitoring['warning_days']) ? $service->ssl_monitoring['warning_days'] : 30) }}" min="1" max="365"
                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                     </div>
@@ -337,25 +327,25 @@
                         </div>
                         <div id="auth-fields">
                             @php
-                                $authType = old('auth_type', $service->auth_config['type'] ?? 'none');
+                                $authType = old('auth_type', isset($service->auth_config['type']) ? $service->auth_config['type'] : 'none');
                             @endphp
                             @if($authType == 'basic')
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
-                                        <input type="text" name="auth_username" value="{{ old('auth_username', $service->auth_config['username'] ?? '') }}" 
+                                        <input type="text" name="auth_username" value="{{ old('auth_username', isset($service->auth_config['username']) ? $service->auth_config['username'] : '') }}" 
                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                                        <input type="password" name="auth_password" value="{{ old('auth_password', $service->auth_config['password'] ?? '') }}" 
+                                        <input type="password" name="auth_password" value="{{ old('auth_password', isset($service->auth_config['password']) ? $service->auth_config['password'] : '') }}" 
                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                     </div>
                                 </div>
                             @elseif($authType == 'bearer')
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bearer Token</label>
-                                    <input type="text" name="auth_token" value="{{ old('auth_token', $service->auth_config['token'] ?? '') }}" 
+                                    <input type="text" name="auth_token" value="{{ old('auth_token', isset($service->auth_config['token']) ? $service->auth_config['token'] : '') }}" 
                                            placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                                            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                 </div>
@@ -363,13 +353,13 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Header Name</label>
-                                        <input type="text" name="auth_key" value="{{ old('auth_key', $service->auth_config['key'] ?? '') }}" 
+                                        <input type="text" name="auth_key" value="{{ old('auth_key', isset($service->auth_config['key']) ? $service->auth_config['key'] : '') }}" 
                                                placeholder="X-API-Key"
                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">API Key Value</label>
-                                        <input type="text" name="auth_value" value="{{ old('auth_value', $service->auth_config['value'] ?? '') }}" 
+                                        <input type="text" name="auth_value" value="{{ old('auth_value', isset($service->auth_config['value']) ? $service->auth_config['value'] : '') }}" 
                                                placeholder="your-api-key-here"
                                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                                     </div>
@@ -439,7 +429,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="flex justify-end mt-8">
+                    <button type="submit" class="inline-flex items-center px-6 py-2 border border-transparent text-base font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none transition-all duration-200 transform hover:scale-105 active:scale-95 shadow">
+                        <svg class="-ml-1 mr-2 h-5 w-5 animate-pulse opacity-60 hidden" id="save-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                        <span>Save Changes</span>
+                    </button>
+                </div>
             </form>
 
             <!-- Danger Zone -->
@@ -465,7 +464,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const typeSelect = document.getElementById('type');
     const automaticSections = ['content-validation-section', 'http-config-section', 'performance-section', 'ssl-section', 'auth-section', 'maintenance-section'];
-    let headerIndex = {{ count(old('headers', $service->headers ?? [])) }};
+    let headerIndex = {{ count(old('http_headers', $service->http_headers ?? [])) }};
     let maintenanceIndex = {{ count(old('maintenance_windows', $service->maintenance_windows ?? [])) }};
     
     function toggleAutomaticSections() {
@@ -487,9 +486,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const headerRow = document.createElement('div');
         headerRow.className = 'header-row flex gap-3 mb-3';
         headerRow.innerHTML = `
-            <input type="text" name="headers[${headerIndex}][key]" placeholder="Header Name" 
+            <input type="text" name="http_headers[${headerIndex}][key]" placeholder="Header Name" 
                    class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            <input type="text" name="headers[${headerIndex}][value]" placeholder="Header Value" 
+            <input type="text" name="http_headers[${headerIndex}][value]" placeholder="Header Value" 
                    class="flex-1 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             <button type="button" class="remove-header bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded"></button>
         `;

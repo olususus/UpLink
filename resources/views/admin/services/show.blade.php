@@ -208,7 +208,7 @@
                                 <span class="text-gray-900 dark:text-gray-100 font-mono">{{ $service->ssl_monitoring['expiry_warning_days'] ?? 30 }}</span>
                             </div>
                         @endif
-                        @if($service->ssl_monitoring['verify_certificate'])
+                        @if(isset($service->ssl_monitoring['verify_certificate']) && $service->ssl_monitoring['verify_certificate'])
                             <div class="flex justify-between">
                                 <span class="text-gray-700 dark:text-gray-300">Verify Certificate:</span>
                                 <span class="text-green-600 dark:text-green-400">Yes</span>

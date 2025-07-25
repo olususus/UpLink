@@ -10,7 +10,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300 transform hover:scale-[1.025] hover:shadow-xl hover:z-10">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300 transform hover:scale-[1.025] hover:shadow-xl hover:z-10">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300 transform hover:scale-[1.025] hover:shadow-xl hover:z-10">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg transition-colors duration-300 transform hover:scale-[1.025] hover:shadow-xl hover:z-10">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -84,7 +84,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300 transform hover:scale-[1.01] hover:shadow-lg">
             <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                 <div>
                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Services Overview</h3>
@@ -124,7 +124,7 @@
             </ul>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300">
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg transition-colors duration-300 transform hover:scale-[1.01] hover:shadow-lg">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Recent Status Checks</h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Latest automatic monitoring results</p>
@@ -163,20 +163,20 @@
         </div>
     </div>
 
-    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg transition-colors duration-300">
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg transition-colors duration-300 transform hover:scale-[1.01] hover:shadow-lg">
         <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Quick Actions</h3>
         </div>
         <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
             <div class="flex space-x-4">
-                <a href="{{ route('admin.incidents.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors duration-200">
-                    Report Incident
+                <a href="{{ route('admin.incidents.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:outline-none transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    <span class="relative">Report Incident</span>
                 </a>
-                <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
-                    Add Service
+                <a href="{{ route('admin.services.create') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    <span class="relative">Add Service</span>
                 </a>
-                <button onclick="window.location.reload()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200">
-                    Refresh Status
+                <button onclick="window.location.reload()" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    <span class="relative">Refresh Status</span>
                 </button>
             </div>
         </div>

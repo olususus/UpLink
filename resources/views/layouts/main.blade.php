@@ -29,13 +29,6 @@
     @include('layouts.navigation')
     <main class="flex-1">
         @yield('content')
-        <div class="w-full flex justify-center py-6">
-            @if(site_logo_url())
-                <img src="{{ site_logo_url() }}" alt="Site Logo" class="h-16 max-h-20 object-contain">
-            @else
-                <span class="text-2xl font-bold text-gray-900 dark:text-gray-100">@yield('title', 'UpLink')</span>
-            @endif
-        </div>
     </main>
 </main>
     <!-- Alpine.js for dropdowns and interactivity -->

@@ -69,9 +69,9 @@
                 </div>
                 
                 <!-- Support Contact -->
-                @if(config('status.support_email'))
+                @if(!empty($supportEmail))
                     <div class="flex-shrink-0">
-                        <a href="mailto:{{ config('status.support_email') }}" 
+                        <a href="mailto:{{ $supportEmail }}" 
                            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition-colors duration-200">
                             <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -250,10 +250,36 @@
         if (header) {
             const refreshDiv = document.createElement('div');
             refreshDiv.className = 'mt-2 text-xs text-gray-500 dark:text-gray-400';
-            refreshDiv.innerHTML = '<span class="refresh-countdown">Auto-refresh in ' + (refreshInterval/1000) + 's</span> | <button onclick="clearInterval(refreshTimer)" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">Disable auto-refresh</button>';
+            refreshDiv.innerHTML = `<span class="refresh-countdown">Auto-refresh in ${refreshInterval/1000}s</span> |
+                <button id="disable-refresh-btn" class="relative inline-flex items-center px-3 py-1 rounded transition-all duration-200 text-blue-600 dark:text-blue-400 hover:text-white hover:bg-blue-600 dark:hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+                    <span class="btn-label">Disable auto-refresh</span>
+                    <span class="btn-spinner hidden absolute right-2">
+                        <svg class="animate-spin h-4 w-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                    </span>
+                </button>`;
             header.appendChild(refreshDiv);
         }
         
+        // Add click interaction for loading animation
+        const disableBtn = document.getElementById('disable-refresh-btn');
+        if (disableBtn) {
+            disableBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.querySelector('.btn-label').classList.add('opacity-50');
+                const spinner = this.querySelector('.btn-spinner');
+                if (spinner) spinner.classList.remove('hidden');
+                setTimeout(() => {
+                    clearInterval(refreshTimer);
+                    this.querySelector('.btn-label').textContent = 'Auto-refresh disabled';
+                    if (spinner) spinner.classList.add('hidden');
+                    this.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                    this.disabled = true;
+                }, 800);
+            });
+        }
         // Start countdown
         refreshTimer = setInterval(updateCountdown, 1000);
     });

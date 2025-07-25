@@ -1,39 +1,43 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors duration-300">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <!-- Left: Logo & Title -->
-            <div class="flex items-center space-x-6">
-                <a href="{{ route('status.index') }}" class="flex items-center group">
-                    <span class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-wide group-hover:text-blue-800 dark:group-hover:text-blue-200 transition">UpLink</span>
+        <div class="flex items-center h-16 w-full">
+            <!-- Left: Navigation -->
+            <div class="flex items-center space-x-6 flex-1 min-w-0">
+                <a href="{{ route('status.index') }}" class="flex items-center group flex-shrink-0">
+                    <span class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 tracking-wide group-hover:text-blue-800 dark:group-hover:text-blue-200 transition duration-300 transform group-hover:scale-105 group-hover:opacity-80">UpLink</span>
                 </a>
-                <!-- Navigation Links -->
-                <div class="flex items-center space-x-6">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    @auth
-                        <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" @keydown.escape="open = false" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none transition">
-                                {{ __('Admin') }}
-                                <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
-                            </button>
-                            <div x-show="open" @click.away="open = false" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg z-50" x-cloak>
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
-                                <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Services</a>
-                                <a href="{{ route('admin.incidents.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Incidents</a>
-                                <a href="{{ route('admin.monitoring.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Monitoring</a>
-                                <a href="{{ route('admin.analytics') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Analytics</a>
-                                <a href="{{ route('admin.notifications.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Notifications</a>
-                                <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-                            </div>
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="relative group">
+                    <span class="transition-colors duration-200">{{ __('Dashboard') }}</span>
+                    <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+                </x-nav-link>
+                @auth
+                    <div x-data="{ open: false }" class="relative">
+                        <button @click="open = !open" @keydown.escape="open = false" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 focus:outline-none transition duration-200 group relative">
+                            <span class="transition-colors duration-200">{{ __('Admin') }}</span>
+                            <svg class="ml-1 h-4 w-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                            <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300"></span>
+                        </button>
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" @click.away="open = false" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg z-50" x-cloak>
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</a>
+                            <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Services</a>
+                            <a href="{{ route('admin.incidents.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Incidents</a>
+                            <a href="{{ route('admin.monitoring.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Monitoring</a>
+                            <a href="{{ route('admin.analytics') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Analytics</a>
+                            <a href="{{ route('admin.notifications.index') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Notifications</a>
+                            <a href="{{ route('admin.settings.edit') }}" class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
                         </div>
-                    @endauth
-                </div>
+                    </div>
+                @endauth
             </div>
-
+            <!-- Center: Logo -->
+            <div class="flex items-center justify-center flex-shrink-0 w-[220px]">
+                @if(site_logo_url())
+                    <img src="{{ site_logo_url() }}" alt="Site Logo" class="max-h-14 h-14 w-auto object-contain mx-auto transition-transform duration-300 hover:scale-110 hover:opacity-90">
+                @endif
+            </div>
             <!-- Right: Controls -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 flex-1 justify-end min-w-0">
                 @if(config('status.dark_mode.enabled', true))
                     <!-- Dark Mode Toggle -->
                     <button 
@@ -92,8 +96,8 @@
             <!-- Hamburger -->
             @auth
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-200 ease-in-out transform" :class="{'rotate-90': open}">
+                    <svg class="h-6 w-6 transition-transform duration-300" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>

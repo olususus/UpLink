@@ -210,7 +210,7 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'url' => 'nullable|url',
             'type' => 'required|in:automatic,manual',
             'status' => 'required|in:operational,degraded,maintenance,outage',

@@ -33,7 +33,8 @@ class StatusController extends Controller
 
             $overallStatus = $this->calculateOverallStatus($services);
 
-            return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'));
+            return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'))
+                ->with('supportEmail', function_exists('support_email') ? support_email() : config('status.support_email'));
             
         } catch (\Exception $e) {
             // Fallback for any database errors
@@ -49,7 +50,8 @@ class StatusController extends Controller
         $overallStatus = 'operational';
         
         return view('status.index', compact('services', 'activeIncidents', 'pastIncidents', 'overallStatus'))
-            ->with('error', $message);
+            ->with('error', $message)
+            ->with('supportEmail', function_exists('support_email') ? support_email() : config('status.support_email'));
     }
 
     private function calculateOverallStatus($services)
