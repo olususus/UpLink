@@ -1,9 +1,10 @@
+
+<?php
 // Fallback route for 404 errors
 use Illuminate\Support\Facades\View;
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });
-<?php
 
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\SetupController;
